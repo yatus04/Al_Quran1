@@ -376,6 +376,18 @@ body {
   padding-left: 44px;
 }
 
+.verse-phonetic {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  color: var(--emerald2);
+  line-height: 1.9;
+  padding-left: 44px;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.03em;
+  display: none;
+}
+.verse-phonetic.show { display: block; }
+
 .verse-actions {
   display: flex; gap: 8px;
   margin-top: 0.8rem;
@@ -580,6 +592,7 @@ footer {
     <div class="lang-switch">
       <button class="lang-btn active" id="lang-fr" onclick="setLang('fr')">FR</button>
       <button class="lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="phon-btn" onclick="togglePhonetic()" title="Afficher/Cacher la phonétique">ABC</button>
     </div>
     <button class="icon-btn" title="Mode jour/nuit" onclick="toggleTheme()" id="theme-btn">🌙</button>
   </div>
@@ -652,6 +665,8 @@ let versesData = [];
 let surahsData = [];
 let translationFr = [];
 let translationEn = [];
+let transliteration = [];
+let showPhonetic = false;
 let surahMeta = {};
 
 const audio = document.getElementById('audio-el');
@@ -818,6 +833,7 @@ async function loadSurah(n) {
   versesData = [];
   translationFr = [];
   translationEn = [];
+  transliteration = [];
 
   const meta = SURAHS[n - 1];
   document.getElementById('s-num').textContent = `Sourate ${n} — السورة رقم ${n}`;
@@ -835,18 +851,20 @@ async function loadSurah(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   try {
-    const [arabicRes, frRes, enRes] = await Promise.all([
+    const [arabicRes, frRes, enRes, translitRes] = await Promise.all([
       fetch(`https://api.alquran.cloud/v1/surah/${n}`),
       fetch(`https://api.alquran.cloud/v1/surah/${n}/fr.hamidullah`),
       fetch(`https://api.alquran.cloud/v1/surah/${n}/en.asad`),
+      fetch(`https://api.alquran.cloud/v1/surah/${n}/en.transliteration`),
     ]);
-    const [arabicData, frData, enData] = await Promise.all([
-      arabicRes.json(), frRes.json(), enRes.json()
+    const [arabicData, frData, enData, translitData] = await Promise.all([
+      arabicRes.json(), frRes.json(), enRes.json(), translitRes.json()
     ]);
 
     versesData = arabicData.data.ayahs;
     translationFr = frData.data.ayahs;
     translationEn = enData.data.ayahs;
+    transliteration = translitData.data.ayahs;
     totalVerses = versesData.length;
 
     document.getElementById('loading').style.display = 'none';
@@ -862,10 +880,12 @@ function renderVerses() {
   const container = document.getElementById('verses-list');
   container.innerHTML = versesData.map((v, i) => {
     const trans = currentLang === 'fr' ? (translationFr[i]?.text || '') : (translationEn[i]?.text || '');
+    const phonet = transliteration[i]?.text || '';
     return `
     <div class="verse-card" id="vc-${v.numberInSurah}" onclick="playVerse(${v.numberInSurah})">
       <div class="verse-number">${v.numberInSurah}</div>
       <div class="verse-arabic">${v.text}</div>
+      <div class="verse-phonetic ${showPhonetic ? 'show' : ''}" id="vp-${v.numberInSurah}">${phonet}</div>
       <div class="verse-translation" id="vt-${v.numberInSurah}">${trans}</div>
       <div class="verse-actions">
         <button class="v-btn" id="vbtn-${v.numberInSurah}" onclick="event.stopPropagation();playVerse(${v.numberInSurah})">▶ Écouter</button>
@@ -889,7 +909,17 @@ function setLang(lang) {
   renderSurahList();
 }
 
-/* ══ AUDIO ══ */
+/* ══ PHONETIC TOGGLE ══ */
+function togglePhonetic() {
+  showPhonetic = !showPhonetic;
+  const btn = document.getElementById('phon-btn');
+  btn.classList.toggle('active', showPhonetic);
+  document.querySelectorAll('.verse-phonetic').forEach(el => {
+    el.classList.toggle('show', showPhonetic);
+  });
+}
+
+
 function getAudioUrl(surah, ayah) {
   const s = String(surah).padStart(3, '0');
   const a = String(ayah).padStart(3, '0');
