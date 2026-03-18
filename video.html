@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur Vidéo — Al-Quran Al-Karim</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C8A96E;--gold2:#E2C98A;--gold3:#8B6F3A;--em:#40916C;--em2:#1B4332;--bg:#0C0E0B;--bg2:#131610;--bg3:#1A1E16;--bg4:#20251C;--tx:#EAE0C8;--tx2:#A89B7A;--tx3:#6B6050;--bd:rgba(200,169,110,.15);--bd2:rgba(200,169,110,.35);--r:6px;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-height:100vh;}
+
+/* TOPBAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;}
+.logo-ar{font-family:'Noto Naskh Arabic',serif;font-size:1.3rem;color:var(--gold);}
+.back-btn{margin-left:auto;padding:.4rem 1rem;background:transparent;border:1px solid var(--bd);color:var(--tx3);border-radius:var(--r);font-size:.8rem;cursor:pointer;text-decoration:none;transition:all .2s;display:flex;align-items:center;gap:.4rem;}
+.back-btn:hover{border-color:var(--gold3);color:var(--gold);}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:380px 1fr;gap:0;min-height:calc(100vh - 57px);}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}}
+
+/* LEFT PANEL */
+.config-panel{background:var(--bg2);border-right:1px solid var(--bd);padding:1.5rem;overflow-y:auto;max-height:calc(100vh - 57px);}
+.section{margin-bottom:1.5rem;}
+.sec-title{font-family:'Cinzel Decorative',serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold3);margin-bottom:.8rem;padding-bottom:.4rem;border-bottom:1px solid var(--bd);}
+
+/* SURAH SELECT */
+.verse-picker{display:flex;gap:8px;margin-bottom:.8rem;}
+.vpicker-sel{flex:1;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);font-family:'Crimson Pro',serif;font-size:.85rem;padding:.4rem .7rem;border-radius:var(--r);outline:none;}
+.vpicker-sel:focus{border-color:var(--gold3);}
+.verse-range{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+
+/* OPTIONS */
+.opt-grid{display:flex;gap:6px;flex-wrap:wrap;}
+.opt{padding:5px 12px;border:1px solid var(--bd);border-radius:3px;font-size:.78rem;cursor:pointer;color:var(--tx2);background:var(--bg3);transition:all .2s;font-family:'Crimson Pro',serif;}
+.opt:hover{border-color:var(--gold3);color:var(--gold);}
+.opt.on{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1);}
+
+/* RANGE */
+.range-row{display:flex;align-items:center;gap:10px;margin-top:.5rem;}
+.range-inp{flex:1;accent-color:var(--gold);}
+.range-val{font-size:.78rem;color:var(--gold);min-width:40px;font-family:'Cinzel Decorative',serif;}
+
+/* GENERATE BTN */
+.gen-btn{width:100%;padding:.8rem;background:rgba(200,169,110,.12);border:1.5px solid var(--gold);border-radius:var(--r);color:var(--gold);font-family:'Cinzel Decorative',serif;font-size:.68rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;margin-top:.5rem;}
+.gen-btn:hover{background:rgba(200,169,110,.22);}
+.gen-btn:disabled{opacity:.4;cursor:not-allowed;}
+.preview-btn{width:100%;padding:.65rem;background:transparent;border:1px solid var(--bd2);border-radius:var(--r);color:var(--tx2);font-family:'Crimson Pro',serif;font-size:.82rem;cursor:pointer;transition:all .2s;margin-top:.5rem;}
+.preview-btn:hover{border-color:var(--gold3);color:var(--gold);}
+
+/* PROGRESS */
+.progress-wrap{display:none;margin-top:1rem;}
+.progress-wrap.show{display:block;}
+.prog-bar{height:8px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:.5rem;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold3),var(--gold));border-radius:4px;width:0%;transition:width .1s;}
+.prog-lbl{font-size:.75rem;color:var(--tx3);text-align:center;}
+.prog-phase{font-size:.68rem;color:var(--gold);text-align:center;margin-top:.2rem;font-style:italic;}
+
+/* RIGHT PANEL — PREVIEW */
+.preview-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;gap:1.5rem;}
+.canvas-frame{border:1px solid var(--bd2);border-radius:8px;overflow:hidden;background:#000;position:relative;box-shadow:0 0 40px rgba(0,0,0,.6);}
+#preview-canvas{display:block;max-width:100%;max-height:60vh;}
+.preview-info{font-size:.78rem;color:var(--tx3);text-align:center;font-style:italic;}
+
+/* VERSE LIST */
+.verse-list-wrap{max-height:180px;overflow-y:auto;border:1px solid var(--bd);border-radius:var(--r);margin-top:.5rem;}
+.verse-list-wrap::-webkit-scrollbar{width:4px;}
+.verse-list-wrap::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
+.vl-item{display:flex;align-items:flex-start;gap:.5rem;padding:.55rem .8rem;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .15s;}
+.vl-item:last-child{border-bottom:none;}
+.vl-item:hover{background:rgba(200,169,110,.04);}
+.vl-item.sel{background:rgba(200,169,110,.08);border-left:2px solid var(--gold);padding-left:calc(.8rem - 2px);}
+.vl-n{font-size:.68rem;color:var(--gold3);min-width:20px;padding-top:2px;}
+.vl-ar{font-family:'Noto Naskh Arabic',serif;font-size:1rem;direction:rtl;text-align:right;line-height:1.6;color:var(--tx);flex:1;}
+
+.status-msg{font-size:.8rem;color:var(--tx3);text-align:center;padding:.5rem;}
+
+/* LOADING SPINNER */
+.mini-spin{width:16px;height:16px;border:2px solid var(--bd);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-ar">القرآن</div>
+  <span style="font-family:'Cinzel Decorative',serif;font-size:.65rem;color:var(--tx3);letter-spacing:.1em;">GÉNÉRATEUR VIDÉO</span>
+  <a href="index.html" class="back-btn">← Retour au site</a>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT: CONFIG -->
+  <div class="config-panel">
+
+    <div class="section">
+      <div class="sec-title">1. Choisir la sourate</div>
+      <div class="verse-picker">
+        <select class="vpicker-sel" id="surah-sel" onchange="onSurahChange()"></select>
+      </div>
+      <div id="verse-loading" class="status-msg"><span class="mini-spin"></span>Chargement...</div>
+      <div id="verse-list-wrap" class="verse-list-wrap" style="display:none">
+        <div id="verse-list"></div>
+      </div>
+      <div style="font-size:.72rem;color:var(--tx3);margin-top:.5rem;">
+        Verset sélectionné : <span id="sel-ref" style="color:var(--gold);">—</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">2. Format vidéo</div>
+      <div class="opt-grid" id="ratio-opts">
+        <button class="opt on" data-w="1080" data-h="1920" onclick="setOpt('ratio',this)">📱 9:16</button>
+        <button class="opt" data-w="1080" data-h="1080" onclick="setOpt('ratio',this)">⬜ 1:1</button>
+        <button class="opt" data-w="1920" data-h="1080" onclick="setOpt('ratio',this)">🖥 16:9</button>
+        <button class="opt" data-w="1080" data-h="1350" onclick="setOpt('ratio',this)">📸 4:5</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">3. Thème visuel</div>
+      <div class="opt-grid" id="theme-opts">
+        <button class="opt on" data-t="dark" onclick="setOpt('theme',this)">🌙 Nuit dorée</button>
+        <button class="opt" data-t="light" onclick="setOpt('theme',this)">☀️ Parchemin</button>
+        <button class="opt" data-t="green" onclick="setOpt('theme',this)">🌿 Émeraude</button>
+        <button class="opt" data-t="blue" onclick="setOpt('theme',this)">🌊 Nuit bleue</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">4. Contenu</div>
+      <div class="opt-grid" id="content-opts">
+        <button class="opt on" data-c="ar+tr" onclick="setOpt('content',this)">🌐 Arabe + Traduction</button>
+        <button class="opt" data-c="ar" onclick="setOpt('content',this)">عربي Arabe seul</button>
+        <button class="opt" data-c="ar+ph" onclick="setOpt('content',this)">ABC + Phonétique</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">5. Durée audio</div>
+      <div class="range-row">
+        <input type="range" class="range-inp" id="dur-range" min="5" max="60" value="15" step="1"
+          oninput="cfg.dur=+this.value;document.getElementById('dur-val').textContent=this.value+'s';drawPreview()">
+        <span class="range-val" id="dur-val">15s</span>
+      </div>
+      <div style="font-size:.7rem;color:var(--tx3);margin-top:.4rem;">Durée de la vidéo si l'audio est indisponible</div>
+    </div>
+
+    <button class="preview-btn" onclick="drawPreview()">👁 Rafraîchir l'aperçu</button>
+    <button class="gen-btn" id="gen-btn" onclick="generate()">🎬 GÉNÉRER LA VIDÉO</button>
+
+    <div class="progress-wrap" id="prog-wrap">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="prog-lbl" id="prog-lbl">Préparation...</div>
+      <div class="prog-phase" id="prog-phase"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: PREVIEW -->
+  <div class="preview-panel">
+    <div class="canvas-frame">
+      <canvas id="preview-canvas"></canvas>
+    </div>
+    <div class="preview-info" id="preview-info">Sélectionnez un verset pour générer un aperçu</div>
+  </div>
+
+</div>
+
+<audio id="aud" crossorigin="anonymous" preload="auto"></audio>
+
+<script>
+/* ── STATE ── */
+const cfg = { w:1080, h:1920, theme:'dark', content:'ar+tr', dur:15 };
+let selVerse = null; // {n, ar, tr, ph, surah, ayah, globalN}
+let vData=[], trFr=[], trEn=[], trPh=[];
+const aud = document.getElementById('aud');
+
+/* ── SURAHS DATA (compact) ── */
+const SS=[
+  {n:1,ar:'الفاتحة',fr:"L'Ouverture",v:7},{n:2,ar:'البقرة',fr:'La Vache',v:286},
+  {n:3,ar:'آل عمران',fr:"La Famille d'Imran",v:200},{n:4,ar:'النساء',fr:'Les Femmes',v:176},
+  {n:5,ar:'المائدة',fr:'La Table Servie',v:120},{n:6,ar:'الأنعام',fr:'Les Bestiaux',v:165},
+  {n:7,ar:'الأعراف',fr:'Les Murailles',v:206},{n:8,ar:'الأنفال',fr:'Le Butin',v:75},
+  {n:9,ar:'التوبة',fr:'Le Repentir',v:129},{n:10,ar:'يونس',fr:'Jonas',v:109},
+  {n:11,ar:'هود',fr:'Houd',v:123},{n:12,ar:'يوسف',fr:'Joseph',v:111},
+  {n:13,ar:'الرعد',fr:'Le Tonnerre',v:43},{n:14,ar:'إبراهيم',fr:'Abraham',v:52},
+  {n:15,ar:'الحجر',fr:'Al-Hijr',v:99},{n:16,ar:'النحل',fr:'Les Abeilles',v:128},
+  {n:17,ar:'الإسراء',fr:'Le Voyage Nocturne',v:111},{n:18,ar:'الكهف',fr:'La Caverne',v:110},
+  {n:19,ar:'مريم',fr:'Marie',v:98},{n:20,ar:'طه',fr:'Ta-Ha',v:135},
+  {n:21,ar:'الأنبياء',fr:'Les Prophètes',v:112},{n:22,ar:'الحج',fr:'Le Pèlerinage',v:78},
+  {n:23,ar:'المؤمنون',fr:'Les Croyants',v:118},{n:24,ar:'النور',fr:'La Lumière',v:64},
+  {n:25,ar:'الفرقان',fr:'Le Discernement',v:77},{n:26,ar:'الشعراء',fr:'Les Poètes',v:227},
+  {n:27,ar:'النمل',fr:'Les Fourmis',v:93},{n:28,ar:'القصص',fr:'Le Récit',v:88},
+  {n:29,ar:'العنكبوت',fr:"L'Araignée",v:69},{n:30,ar:'الروم',fr:'Les Romains',v:60},
+  {n:31,ar:'لقمان',fr:'Luqman',v:34},{n:32,ar:'السجدة',fr:'La Prosternation',v:30},
+  {n:33,ar:'الأحزاب',fr:'Les Coalisés',v:73},{n:34,ar:'سبأ',fr:'Saba',v:54},
+  {n:35,ar:'فاطر',fr:'Le Créateur',v:45},{n:36,ar:'يس',fr:'Ya-Sin',v:83},
+  {n:37,ar:'الصافات',fr:'Ceux qui se rangent',v:182},{n:38,ar:'ص',fr:'Sad',v:88},
+  {n:39,ar:'الزمر',fr:'Les Groupes',v:75},{n:40,ar:'غافر',fr:'Le Pardonneur',v:85},
+  {n:41,ar:'فصلت',fr:'Exposés en détail',v:54},{n:42,ar:'الشورى',fr:'La Consultation',v:53},
+  {n:43,ar:'الزخرف',fr:"L'Ornement",v:89},{n:44,ar:'الدخان',fr:'La Fumée',v:59},
+  {n:45,ar:'الجاثية',fr:"L'Agenouillée",v:37},{n:46,ar:'الأحقاف',fr:'Les Dunes',v:35},
+  {n:47,ar:'محمد',fr:'Muhammad',v:38},{n:48,ar:'الفتح',fr:'La Victoire',v:29},
+  {n:49,ar:'الحجرات',fr:'Les Appartements',v:18},{n:50,ar:'ق',fr:'Qaf',v:45},
+  {n:51,ar:'الذاريات',fr:'Les Vents',v:60},{n:52,ar:'الطور',fr:'Le Mont',v:49},
+  {n:53,ar:'النجم',fr:"L'Étoile",v:62},{n:54,ar:'القمر',fr:'La Lune',v:55},
+  {n:55,ar:'الرحمن',fr:'Le Tout Miséricordieux',v:78},{n:56,ar:'الواقعة',fr:"L'Événement",v:96},
+  {n:57,ar:'الحديد',fr:'Le Fer',v:29},{n:58,ar:'المجادلة',fr:'La Discussion',v:22},
+  {n:59,ar:'الحشر',fr:"L'Exode",v:24},{n:60,ar:'الممتحنة',fr:'La Femme éprouvée',v:13},
+  {n:61,ar:'الصف',fr:'Le Rang',v:14},{n:62,ar:'الجمعة',fr:'Le Vendredi',v:11},
+  {n:63,ar:'المنافقون',fr:'Les Hypocrites',v:11},{n:64,ar:'التغابن',fr:'La Déception',v:18},
+  {n:65,ar:'الطلاق',fr:'Le Divorce',v:12},{n:66,ar:'التحريم',fr:"L'Interdiction",v:12},
+  {n:67,ar:'الملك',fr:'La Royauté',v:30},{n:68,ar:'القلم',fr:'La Plume',v:52},
+  {n:69,ar:'الحاقة',fr:"L'Inévitable",v:52},{n:70,ar:'المعارج',fr:'Les Degrés',v:44},
+  {n:71,ar:'نوح',fr:'Noé',v:28},{n:72,ar:'الجن',fr:'Les Djinns',v:28},
+  {n:73,ar:'المزمل',fr:"L'Enveloppé",v:20},{n:74,ar:'المدثر',fr:'Celui qui se couvre',v:56},
+  {n:75,ar:'القيامة',fr:'La Résurrection',v:40},{n:76,ar:'الإنسان',fr:"L'Homme",v:31},
+  {n:77,ar:'المرسلات',fr:'Les Envoyés',v:50},{n:78,ar:'النبأ',fr:"L'Annonce",v:40},
+  {n:79,ar:'النازعات',fr:'Ceux qui arrachent',v:46},{n:80,ar:'عبس',fr:"Il s'est renfrogné",v:42},
+  {n:81,ar:'التكوير',fr:"L'Enroulement",v:29},{n:82,ar:'الانفطار',fr:'La Déchirure',v:19},
+  {n:83,ar:'المطففين',fr:'Les Fraudeurs',v:36},{n:84,ar:'الانشقاق',fr:'La Déchirure du ciel',v:25},
+  {n:85,ar:'البروج',fr:'Les Constellations',v:22},{n:86,ar:'الطارق',fr:"L'Astre nocturne",v:17},
+  {n:87,ar:'الأعلى',fr:'Le Très-Haut',v:19},{n:88,ar:'الغاشية',fr:"L'Enveloppante",v:26},
+  {n:89,ar:'الفجر',fr:"L'Aurore",v:30},{n:90,ar:'البلد',fr:'La Cité',v:20},
+  {n:91,ar:'الشمس',fr:'Le Soleil',v:15},{n:92,ar:'الليل',fr:'La Nuit',v:21},
+  {n:93,ar:'الضحى',fr:'La Matinée',v:11},{n:94,ar:'الشرح',fr:"L'Expansion",v:8},
+  {n:95,ar:'التين',fr:'Le Figuier',v:8},{n:96,ar:'العلق',fr:'Le Caillot',v:19},
+  {n:97,ar:'القدر',fr:'La Nuit du Destin',v:5},{n:98,ar:'البينة',fr:'La Preuve',v:8},
+  {n:99,ar:'الزلزلة',fr:'Le Séisme',v:8},{n:100,ar:'العاديات',fr:'Les Coursiers',v:11},
+  {n:101,ar:'القارعة',fr:'Le Fracas',v:11},{n:102,ar:'التكاثر',fr:'La Rivalité',v:8},
+  {n:103,ar:'العصر',fr:'Le Temps',v:3},{n:104,ar:'الهمزة',fr:'Le Calomniateur',v:9},
+  {n:105,ar:'الفيل',fr:"L'Éléphant",v:5},{n:106,ar:'قريش',fr:'Les Quraysh',v:4},
+  {n:107,ar:'الماعون',fr:"L'Ustensile",v:7},{n:108,ar:'الكوثر',fr:"L'Abondance",v:3},
+  {n:109,ar:'الكافرون',fr:'Les Mécréants',v:6},{n:110,ar:'النصر',fr:'Le Secours',v:3},
+  {n:111,ar:'المسد',fr:'Les Fibres',v:5},{n:112,ar:'الإخلاص',fr:'La Dévotion Pure',v:4},
+  {n:113,ar:'الفلق',fr:"L'Aube",v:5},{n:114,ar:'الناس',fr:'Les Hommes',v:6},
+];
+
+/* ── THEMES ── */
+const TH = {
+  dark: {bg:'#060604',c1:'#0D0B07',c2:'#1A1710',gold:'#C8A96E',gold2:'#E2C98A',tx:'#EAE0C8',tx2:'#A89B7A',star:'#C8A96E'},
+  light:{bg:'#E8DEC8',c1:'#F5EDD8',c2:'#EDE4C8',gold:'#8B6F3A',gold2:'#C8A96E',tx:'#1C1A14',tx2:'#5A4E35',star:'#8B6F3A'},
+  green:{bg:'#050F0A',c1:'#0D1F16',c2:'#1B3526',gold:'#40916C',gold2:'#6FCF97',tx:'#D4EDE1',tx2:'#8FC4A8',star:'#40916C'},
+  blue: {bg:'#020810',c1:'#050E1A',c2:'#0C1E30',gold:'#5BA3D9',gold2:'#93C5FD',tx:'#C8DFF0',tx2:'#7BA8C8',star:'#5BA3D9'},
+};
+
+/* ── INIT ── */
+window.addEventListener('load', () => {
+  const sel = document.getElementById('surah-sel');
+  sel.innerHTML = SS.map(s => `<option value="${s.n}">${s.n}. ${s.ar} — ${s.fr}</option>`).join('');
+  onSurahChange();
+});
+
+/* ── SURAH LOAD ── */
+async function onSurahChange() {
+  const n = +document.getElementById('surah-sel').value;
+  vData=[]; trFr=[]; trEn=[]; trPh=[]; selVerse=null;
+  document.getElementById('verse-loading').style.display='block';
+  document.getElementById('verse-list-wrap').style.display='none';
+  document.getElementById('sel-ref').textContent='—';
+  try {
+    const [r1,r2,r3,r4] = await Promise.all([
+      fetch('https://api.alquran.cloud/v1/surah/'+n),
+      fetch('https://api.alquran.cloud/v1/surah/'+n+'/fr.hamidullah'),
+      fetch('https://api.alquran.cloud/v1/surah/'+n+'/en.asad'),
+      fetch('https://api.alquran.cloud/v1/surah/'+n+'/en.transliteration'),
+    ]);
+    const [d1,d2,d3,d4] = await Promise.all([r1.json(),r2.json(),r3.json(),r4.json()]);
+    vData=d1.data.ayahs; trFr=d2.data.ayahs; trEn=d3.data.ayahs; trPh=d4.data.ayahs;
+    document.getElementById('verse-loading').style.display='none';
+    renderVerseList(n);
+  } catch(e) {
+    document.getElementById('verse-loading').textContent='Erreur. Vérifiez votre connexion.';
+  }
+}
+
+function renderVerseList(surahN) {
+  const el = document.getElementById('verse-list');
+  el.innerHTML = vData.map((v,i) => `
+    <div class="vl-item" id="vli${v.numberInSurah}" onclick="selectVerse(${v.numberInSurah},${surahN})">
+      <span class="vl-n">${v.numberInSurah}</span>
+      <span class="vl-ar">${v.text}</span>
+    </div>`).join('');
+  document.getElementById('verse-list-wrap').style.display='block';
+  // Auto-select first verse
+  selectVerse(1, surahN);
+}
+
+function selectVerse(ayah, surahN) {
+  const n = surahN || +document.getElementById('surah-sel').value;
+  const i = ayah - 1;
+  document.querySelectorAll('.vl-item').forEach(e => e.classList.remove('sel'));
+  const el = document.getElementById('vli'+ayah);
+  if (el) { el.classList.add('sel'); el.scrollIntoView({block:'nearest'}); }
+  const globalN = SS.slice(0, n-1).reduce((a,s)=>a+s.v,0) + ayah;
+  selVerse = {
+    ar:   vData[i]?.text || '',
+    tr:   trFr[i]?.text  || '',
+    ph:   trPh[i]?.text  || '',
+    ref:  SS[n-1].ar + ' — ' + n + ':' + ayah,
+    globalN,
+    surahN: n, ayahN: ayah,
+  };
+  document.getElementById('sel-ref').textContent = SS[n-1].ar + ' ' + n + ':' + ayah;
+  drawPreview();
+}
+
+/* ── OPTION SETTERS ── */
+function setOpt(type, btn) {
+  const grp = btn.closest('.opt-grid');
+  grp.querySelectorAll('.opt').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  if (type === 'ratio')   { cfg.w = +btn.dataset.w; cfg.h = +btn.dataset.h; }
+  if (type === 'theme')   cfg.theme   = btn.dataset.t;
+  if (type === 'content') cfg.content = btn.dataset.c;
+  drawPreview();
+}
+
+/* ── DRAW FRAME ── */
+// t = 0..1 (time progress), audioProgress = 0..1 (audio position)
+function drawFrame(ctx, W, H, t, verse, audioT) {
+  const T = TH[cfg.theme];
+  // Background gradient effect
+  ctx.fillStyle = T.bg; ctx.fillRect(0,0,W,H);
+
+  // Animated star particles
+  const numStars = 60;
+  for (let i=0; i<numStars; i++) {
+    const seed1 = (i*137.508+t*0.3)%1;
+    const seed2 = (i*97.3+t*0.2)%1;
+    const x = ((seed1*W + t*W*0.05*(i%3==0?1:-1)) % W + W) % W;
+    const y = ((seed2*H + t*H*0.02*(i%2==0?1:-1)) % H + H) % H;
+    const alpha = 0.3 + 0.4*Math.sin(t*Math.PI*2*2 + i);
+    const size  = 0.5 + (i%3)*0.5;
+    ctx.beginPath(); ctx.arc(x,y,size,0,Math.PI*2);
+    ctx.fillStyle = T.star + Math.round(alpha*255).toString(16).padStart(2,'0');
+    ctx.fill();
+  }
+
+  // Inner card with rounded corners
+  const px = W*0.06, py = H*0.04;
+  ctx.fillStyle = T.c1 + 'DD';
+  rr(ctx, px, py, W-px*2, H-py*2, W*0.04); ctx.fill();
+
+  // Decorative border
+  ctx.strokeStyle = T.gold + '55'; ctx.lineWidth = Math.max(1, W*0.002);
+  rr(ctx, px, py, W-px*2, H-py*2, W*0.04); ctx.stroke();
+
+  // Top gold bar (animated width based on audio)
+  const barW = (W-px*2) * (audioT || t);
+  ctx.fillStyle = T.gold;
+  rr(ctx, px, py, barW, H*0.007, W*0.003); ctx.fill();
+
+  // Bismillah ornament (faded)
+  const bs = Math.round(W*0.048);
+  ctx.font = '500 '+bs+'px "Noto Naskh Arabic",serif';
+  ctx.fillStyle = T.gold; ctx.textAlign = 'center'; ctx.globalAlpha = 0.15;
+  ctx.fillText('﷽', W/2, H*0.115); ctx.globalAlpha = 1;
+
+  // Star ornaments
+  ctx.font = Math.round(W*0.02)+'px serif'; ctx.fillStyle = T.star;
+  ctx.fillText('✦', W/2 - W*0.1, H*0.195);
+  ctx.fillText('✦', W/2 + W*0.1, H*0.195);
+
+  // ── ARABIC TEXT — word by word reveal ──
+  const arWords = verse.ar.split(' ');
+  const numWords = arWords.length;
+  // Each word appears progressively: 0..0.6 of t for word reveal
+  const wordRevealEnd = 0.65;
+  const wordProgress = Math.min(1, t / wordRevealEnd);
+  const wordsToShow = Math.max(1, Math.ceil(wordProgress * numWords));
+  const visibleAr = arWords.slice(0, wordsToShow).join(' ');
+
+  const as = Math.round(W * 0.055);
+  ctx.font = '600 '+as+'px "Noto Naskh Arabic",serif';
+  ctx.fillStyle = T.tx; ctx.textAlign = 'center'; ctx.direction = 'rtl';
+
+  // Glow on latest word
+  if (wordsToShow < numWords) {
+    ctx.shadowColor = T.gold; ctx.shadowBlur = W*0.02;
+  }
+  const al = wt(ctx, visibleAr, W - px*3.5);
+  const alh = as * 1.65;
+  let ay = H*0.36 - (al.length * alh) / 2 + as;
+  al.forEach(line => { ctx.fillText(line, W/2, ay); ay += alh; });
+  ctx.shadowBlur = 0; ctx.direction = 'ltr';
+
+  // ── DIVIDER ──
+  const divY = ay + H*0.022;
+  ctx.strokeStyle = T.gold+'66'; ctx.lineWidth = Math.max(1, W*0.001);
+  ctx.beginPath(); ctx.moveTo(W*0.22, divY); ctx.lineTo(W*0.78, divY); ctx.stroke();
+
+  // ── TRANSLATION — progressive line by line ──
+  if (cfg.content !== 'ar') {
+    const sub = cfg.content === 'ar+ph' ? verse.ph : verse.tr;
+    const ss = Math.round(W * 0.03);
+    ctx.font = 'italic '+ss+'px Georgia,serif';
+    ctx.fillStyle = T.tx2; ctx.textAlign = 'center'; ctx.direction = 'ltr';
+    const sl = wt(ctx, sub, W - px*3.5);
+    const numLines = sl.length;
+    // Translation appears after arabic (t > 0.5), line by line
+    const trStart = 0.5;
+    const trProgress = Math.max(0, Math.min(1, (t - trStart) / 0.4));
+    const linesToShow = Math.max(0, Math.ceil(trProgress * numLines));
+    let sy = divY + H*0.04;
+    sl.slice(0, linesToShow).forEach((line, idx) => {
+      // Fade in each line
+      const lineAlpha = Math.min(1, (trProgress * numLines - idx) * 2);
+      ctx.globalAlpha = lineAlpha;
+      ctx.fillText(line, W/2, sy); sy += ss * 1.55;
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  // ── REFERENCE ──
+  const refAlpha = Math.max(0, Math.min(1, (t - 0.75) / 0.2));
+  if (refAlpha > 0) {
+    ctx.globalAlpha = refAlpha;
+    ctx.font = '500 '+Math.round(W*0.026)+'px "Noto Naskh Arabic",serif';
+    ctx.fillStyle = T.gold; ctx.textAlign = 'center';
+    ctx.fillText('— '+verse.ref+' —', W/2, H*0.82);
+    ctx.font = Math.round(W*0.02)+'px Georgia,serif';
+    ctx.fillStyle = T.gold+'88';
+    ctx.fillText('al-quran1.vercel.app', W/2, H*0.875);
+    ctx.globalAlpha = 1;
+  }
+
+  // ── AUDIO PROGRESS BAR ──
+  if (audioT !== undefined) {
+    const bh = H*0.006, bx = px, by = H-py-bh;
+    ctx.fillStyle = T.c2;
+    rr(ctx, bx, by, W-px*2, bh, bh/2); ctx.fill();
+    ctx.fillStyle = T.gold;
+    rr(ctx, bx, by, Math.max(bh, (W-px*2)*audioT), bh, bh/2); ctx.fill();
+  }
+}
+
+/* ── PREVIEW ── */
+function drawPreview() {
+  if (!selVerse) return;
+  const cv = document.getElementById('preview-canvas');
+  const asp = cfg.w / cfg.h;
+  let pw, ph;
+  if (asp >= 1) { pw = Math.min(500, window.innerWidth - 80); ph = Math.round(pw / asp); }
+  else { ph = Math.min(520, window.innerHeight - 150); pw = Math.round(ph * asp); }
+  cv.width = pw; cv.height = ph;
+  const ctx = cv.getContext('2d');
+  drawFrame(ctx, pw, ph, 0.55, selVerse, 0.55);
+  document.getElementById('preview-info').textContent =
+    cfg.w+'×'+cfg.h+'px · Thème: '+cfg.theme+' · '+selVerse.ref;
+}
+
+/* ── GENERATE VIDEO ── */
+async function generate() {
+  if (!selVerse) { alert('Veuillez sélectionner un verset.'); return; }
+
+  const btn = document.getElementById('gen-btn');
+  const pw  = document.getElementById('prog-wrap');
+  const pf  = document.getElementById('prog-fill');
+  const pl  = document.getElementById('prog-lbl');
+  const pp  = document.getElementById('prog-phase');
+
+  btn.disabled = true;
+  pw.classList.add('show');
+
+  // Scale down for performance
+  const W = Math.min(cfg.w, 720);
+  const H = Math.min(cfg.h, Math.round(720 * cfg.h / cfg.w));
+  const FPS = 30;
+
+  // ── STEP 1: Load audio ──
+  pp.textContent = 'Chargement de l\'audio...';
+  pl.textContent = '0%'; pf.style.width='5%';
+
+  const audioUrl = 'https://cdn.islamic.network/quran/audio/128/ar.alafasy/'+selVerse.globalN+'.mp3';
+  let audioDur = cfg.dur;
+  let audioBuffer = null;
+
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const actx = new AudioCtx();
+    pp.textContent = 'Décodage audio...';
+    const resp = await fetch(audioUrl);
+    const arrayBuf = await resp.arrayBuffer();
+    audioBuffer = await actx.decodeAudioData(arrayBuf);
+    audioDur = audioBuffer.duration;
+    pp.textContent = 'Audio chargé — durée : '+audioDur.toFixed(1)+'s';
+  } catch(e) {
+    pp.textContent = 'Audio indisponible — durée fixe utilisée';
+    audioDur = cfg.dur;
+  }
+
+  const totalFrames = Math.round(audioDur * FPS);
+  pf.style.width='10%';
+
+  // ── STEP 2: Setup canvas + recorder ──
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+
+  pp.textContent = 'Initialisation de l\'enregistrement...';
+  const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+    ? 'video/webm;codecs=vp9' : 'video/webm';
+  const stream = cv.captureStream(FPS);
+
+  // Add audio track if we have audio buffer
+  let mediaStream = stream;
+  if (audioBuffer) {
+    try {
+      const AudioCtx2 = window.AudioContext || window.webkitAudioContext;
+      const actx2 = new AudioCtx2();
+      const dest = actx2.createMediaStreamDestination();
+      const src = actx2.createBufferSource();
+      src.buffer = audioBuffer;
+      src.connect(dest);
+      const combined = new MediaStream([
+        ...stream.getVideoTracks(),
+        ...dest.stream.getAudioTracks(),
+      ]);
+      mediaStream = combined;
+      src.start(0); // Will start when recording starts
+    } catch(e) {
+      pp.textContent = 'Audio non intégrable — vidéo muette';
+    }
+  }
+
+  const rec = new MediaRecorder(mediaStream, { mimeType: mime, videoBitsPerSecond: 5000000 });
+  const chunks = [];
+  rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+  rec.onstop = () => {
+    const blob = new Blob(chunks, { type: mime });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = 'quran-verset-'+selVerse.surahN+'-'+selVerse.ayahN+'.webm';
+    a.click(); URL.revokeObjectURL(url);
+    btn.disabled = false;
+    pw.classList.remove('show');
+    pf.style.width = '0%';
+    // Track stat
+    localStorage.setItem('aq_videos', (+localStorage.getItem('aq_videos')||0)+1);
+  };
+
+  // ── STEP 3: Render frames ──
+  pp.textContent = 'Rendu des images...';
+  rec.start();
+
+  for (let f = 0; f < totalFrames; f++) {
+    const t  = f / (totalFrames - 1);
+    const at = f / (totalFrames - 1); // audio sync progress
+    drawFrame(ctx, W, H, t, selVerse, at);
+
+    const pct = Math.round(10 + (f / totalFrames) * 88);
+    pf.style.width = pct+'%';
+    pl.textContent = pct+'% — image '+f+'/'+totalFrames;
+
+    // Yield every frame to keep UI responsive
+    await new Promise(r => setTimeout(r, 1));
+  }
+
+  pf.style.width = '100%';
+  pp.textContent = 'Finalisation...';
+  pl.textContent = 'Presque prêt...';
+
+  await new Promise(r => setTimeout(r, 200));
+  rec.stop();
+}
+
+/* ── UTILS ── */
+function rr(ctx,x,y,w,h,r){
+  if(w<=0||h<=0)return;
+  r=Math.min(r,w/2,h/2);
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+}
+function wt(ctx,txt,mw){
+  if(!txt)return[''];
+  const words=txt.split(' ');const lines=[];let line='';
+  for(const w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>mw&&line){lines.push(line);line=w;}else line=t;}
+  if(line)lines.push(line);return lines.slice(0,7);
+}
+</script>
+</body>
+</html>

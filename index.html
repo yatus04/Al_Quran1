@@ -417,7 +417,9 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     <div style="font-family:'Noto Naskh Arabic',serif;font-size:1.1rem;color:var(--gold);margin-bottom:5px;">صَدَقَ اللَّهُ الْعَظِيمُ</div>
     Allah le Très-Grand a dit la vérité · <span id="frec">Mishary Rashid Alafasy</span>
     <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--bd);">
-      Conçu avec ❤️ par <strong style="color:var(--gold)">Yatus</strong> — Dakar, Sénégal
+      <a href="video.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;background:rgba(200,169,110,.08);border:1px solid var(--bd2);border-radius:var(--r);color:var(--gold);text-decoration:none;font-size:.78rem;margin-bottom:.8rem;">🎬 Générateur de vidéo</a>
+    <br>
+    Conçu avec ❤️ par <strong style="color:var(--gold)">Yatus</strong> — Dakar, Sénégal
       <br><span style="font-size:.72rem;">© 2025 al-quran1.vercel.app</span>
     </div>
   </footer>
@@ -568,6 +570,15 @@ const RECS=[
 
 /* ── INIT ── */
 window.addEventListener('load',()=>{
+  // Track visit
+  localStorage.setItem('aq_visitors', (+localStorage.getItem('aq_visitors')||0)+1);
+  const today = new Date().toDateString();
+  if(localStorage.getItem('aq_last_day')!==today){
+    localStorage.setItem('aq_today',1);
+    localStorage.setItem('aq_last_day',today);
+  } else {
+    localStorage.setItem('aq_today', (+localStorage.getItem('aq_today')||0)+1);
+  }
   buildSel();renderSList();loadSurah(1);loadVod();
   setTimeout(()=>document.getElementById('greeting').classList.add('hide'),4400);
 });
@@ -669,6 +680,16 @@ function toggleTheme(){
 function gN(s,a){return SS.slice(0,s-1).reduce((x,r)=>x+r.v,0)+a;}
 function playV(n){
   stopAud();curV=n;
+  localStorage.setItem('aq_verses', (+localStorage.getItem('aq_verses')||0)+1);
+  // Track top surah
+  try {
+    const key='aq_top_surahs';
+    const tops=JSON.parse(localStorage.getItem(key)||'[]');
+    const m=SS[curS-1];const idx=tops.findIndex(s=>s.name===m.fr);
+    if(idx>=0)tops[idx].v++;else tops.push({name:m.fr,v:1});
+    tops.sort((a,b)=>b.v-a.v);
+    localStorage.setItem(key,JSON.stringify(tops.slice(0,10)));
+  } catch(e){}
   const m=SS[curS-1];
   document.getElementById('pinfo').textContent=m.ar+' — '+toAr(n);
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
@@ -766,6 +787,7 @@ const SH_THEMES={
   green:{bg:'#0D1F16',bg2:'#1B3526',gold:'#40916C',tx:'#D4EDE1',tx2:'#8FC4A8',bd:'rgba(64,145,108,.5)'},
 };
 function openShare(src){
+  localStorage.setItem('aq_shares', (+localStorage.getItem('aq_shares')||0)+1);
   if(src==='vod'){if(!vodData)return;shareV={ar:vodData.ar,tr:vodData.fr,ref:SS[vodData.sN-1].ar+' — '+vodData.sN+':'+vodData.aN};}
   else{const i=curV-1;if(!vData.length)return;const tr=curLang==='fr'?(trFr[i]?.text||''):(trEn[i]?.text||'');shareV={ar:vData[i].text,tr,ref:SS[curS-1].ar+' — '+curS+':'+curV};}
   document.getElementById('sharewrap').classList.add('open');drawShare();
