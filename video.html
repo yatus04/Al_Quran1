@@ -122,8 +122,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .tlfill{height:100%;background:var(--gold);width:0%;transition:width .1s;}
 .tldur{font-size:.62rem;color:var(--tx3);}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
+<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 </head>
 <body>
 
@@ -253,7 +252,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 /* STATE */
 let exportFmt = 'mp4'; // 'mp4' or 'webm'
 let ffmpegReady = false;
-let ffmpegInstance = null;
+let ffmpegInstance = null; // ffmpeg.wasm 0.11.x
 
 const cfg={w:1080,h:1920,theme:'dark',content:'ar+tr',rec:'ar.alafasy',fallback:8};
 let vData=[],trFr=[],trPh=[];
@@ -727,58 +726,54 @@ async function generate(){
   rec.stop();
 }
 
-/* ── MP4 CONVERSION VIA FFMPEG.WASM ── */
+/* ── MP4 CONVERSION VIA FFMPEG.WASM 0.11 ── */
 async function convertToMp4(webmBlob, btn, pw, pf, pl, pp, nVerses, totDur) {
   pp.textContent = 'Conversion en MP4...';
-  pl.textContent = 'Chargement de ffmpeg...';
   pf.style.width = '98%';
 
   try {
-    const { FFmpeg } = FFmpegWASM;
-    const { fetchFile, toBlobURL } = FFmpegUtil;
+    if (typeof FFmpeg === 'undefined' || !FFmpeg.createFFmpeg) {
+      throw new Error('ffmpeg.wasm non charge - verifiez votre connexion internet');
+    }
+    // Note: ffmpeg 0.11.x works without crossOriginIsolated
 
     if (!ffmpegInstance) {
-      ffmpegInstance = new FFmpeg();
-      ffmpegInstance.on('log', ({ message }) => {
-        // Parse ffmpeg progress from log
-        const m = message.match(/time=(\d+:\d+:\d+)/);
-        if (m) {
-          const parts = m[1].split(':');
-          const secs = +parts[0]*3600 + +parts[1]*60 + +parts[2];
-          const pct = Math.min(99, Math.round(98 + secs/totDur));
-          pl.textContent = 'Conversion MP4... ' + m[1];
-        }
+      ffmpegInstance = FFmpeg.createFFmpeg({
+        log: false,
+        progress: ({ ratio }) => {
+          if (ratio > 0) pl.textContent = 'Conversion ' + Math.round(ratio * 100) + '%...';
+        },
+        corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js', // v0.11 compatible
       });
-      pp.textContent = 'Initialisation de ffmpeg.wasm...';
-      const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd';
-      await ffmpegInstance.load({
-        coreURL: await toBlobURL(baseURL+'/ffmpeg-core.js',   'text/javascript'),
-        wasmURL: await toBlobURL(baseURL+'/ffmpeg-core.wasm', 'application/wasm'),
-      });
+    }
+
+    if (!ffmpegReady) {
+      pp.textContent = 'Chargement ffmpeg (~15s première fois)...';
+      pl.textContent = 'Patientez...';
+      await ffmpegInstance.load();
       ffmpegReady = true;
     }
 
-    pp.textContent = 'Écriture du fichier WebM...';
-    const ff = ffmpegInstance;
-    const webmData = await fetchFile(webmBlob);
-    await ff.writeFile('input.webm', webmData);
+    pp.textContent = 'Écriture du fichier source...';
+    const { fetchFile } = FFmpeg;
+    ffmpegInstance.FS('writeFile', 'in.webm', await fetchFile(webmBlob));
 
     pp.textContent = 'Conversion WebM → MP4...';
-    pl.textContent = 'En cours... (peut prendre 1–2 min)';
+    pl.textContent = 'En cours (1-2 min)...';
 
-    await ff.exec([
-      '-i', 'input.webm',
+    await ffmpegInstance.run(
+      '-i', 'in.webm',
       '-c:v', 'libx264',
       '-preset', 'ultrafast',
       '-crf', '23',
       '-c:a', 'aac',
       '-b:a', '128k',
       '-movflags', '+faststart',
-      '-y', 'output.mp4'
-    ]);
+      '-y', 'out.mp4'
+    );
 
-    const mp4Data = await ff.readFile('output.mp4');
-    const mp4Blob = new Blob([mp4Data.buffer], { type: 'video/mp4' });
+    const data = ffmpegInstance.FS('readFile', 'out.mp4');
+    const mp4Blob = new Blob([data.buffer], { type: 'video/mp4' });
     const url = URL.createObjectURL(mp4Blob);
     const a = document.createElement('a');
     a.href = url;
@@ -786,20 +781,20 @@ async function convertToMp4(webmBlob, btn, pw, pf, pl, pp, nVerses, totDur) {
     a.click();
     URL.revokeObjectURL(url);
 
-    await ff.deleteFile('input.webm');
-    await ff.deleteFile('output.mp4');
+    try { ffmpegInstance.FS('unlink', 'in.webm'); } catch(e) {}
+    try { ffmpegInstance.FS('unlink', 'out.mp4'); } catch(e) {}
 
     btn.disabled = false;
     pw.classList.remove('on');
     pf.style.width = '0%';
     pp.textContent = '';
     localStorage.setItem('aq_videos', (+localStorage.getItem('aq_videos')||0)+1);
-    alert('✅ Vidéo MP4 prête — ' + nVerses + ' verset(s), ' + totDur.toFixed(1) + 's');
+    alert('Video MP4 prete ! ' + nVerses + ' verset(s), ' + totDur.toFixed(1) + 's');
 
   } catch(err) {
     console.error('FFmpeg error:', err);
-    // Fallback: download as WebM anyway
-    pp.textContent = 'Conversion échouée — téléchargement WebM...';
+    pp.textContent = 'MP4 echoue — WebM telecharge...';
+    pl.textContent = String(err.message || err).slice(0, 60);
     const url = URL.createObjectURL(webmBlob);
     const a = document.createElement('a');
     a.href = url;
@@ -809,7 +804,7 @@ async function convertToMp4(webmBlob, btn, pw, pf, pl, pp, nVerses, totDur) {
     btn.disabled = false;
     pw.classList.remove('on');
     pf.style.width = '0%';
-    alert('⚠ Conversion MP4 indisponible — fichier WebM téléchargé. Ouvrez avec VLC.');
+    alert('MP4 indisponible. Fichier WebM telecharge. Ouvrez avec VLC ou Chrome.\nErreur: ' + (err.message || err));
   }
 }
 
