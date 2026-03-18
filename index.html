@@ -536,6 +536,65 @@ body {
 }
 #overlay.show { display: block; }
 
+
+/* ── RECITER PANEL ── */
+#reciter-panel {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--bg2);
+  border-top: 1px solid var(--border2);
+  z-index: 200;
+  transform: translateY(110%);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  padding: 1.2rem 1.5rem 2rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+#reciter-panel.open { transform: translateY(0); }
+.reciter-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.reciter-panel-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.reciter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+.reciter-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--bg3);
+}
+.reciter-item:hover { border-color: var(--border2); background: var(--bg4); }
+.reciter-item.active { border-color: var(--gold); background: rgba(200,169,110,0.08); }
+.reciter-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: 0.85rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.reciter-item.active .reciter-avatar { background: rgba(200,169,110,0.15); border-color: var(--gold); }
+.reciter-name { font-size: 0.85rem; color: var(--text); line-height: 1.3; }
+.reciter-style { font-size: 0.72rem; color: var(--text3); margin-top: 1px; font-style: italic; }
+.reciter-check { margin-left: auto; color: var(--gold); font-size: 0.9rem; display: none; }
+.reciter-item.active .reciter-check { display: block; }
+
 /* ── FOOTER ── */
 footer {
   text-align: center;
@@ -576,7 +635,7 @@ footer {
   <input class="panel-search" type="text" placeholder="Rechercher une sourate..." oninput="filterSurahs(this.value)">
   <div class="surah-list" id="surah-list-el"></div>
 </div>
-<div id="overlay" onclick="closePanel()"></div>
+<div id="overlay" onclick="closePanel();closeReciterPanel();"></div>
 
 <!-- APP -->
 <div id="app">
@@ -612,6 +671,7 @@ footer {
       </div>
       <span class="time-label" id="t-total">0:00</span>
     </div>
+    <button class="icon-btn" title="Choisir le récitateur" onclick="openReciterPanel()" id="reciter-btn" style="font-size:0.7rem;letter-spacing:0.04em;width:auto;padding:0 10px;font-family:'Crimson Pro',serif;">🎙 Récitateur</button>
     <div class="autoplay-toggle" onclick="toggleAutoplay()" title="Lecture continue">
       <div class="toggle-switch on" id="autoplay-sw"><div class="toggle-knob"></div></div>
       <span id="autoplay-label">Auto</span>
@@ -643,9 +703,19 @@ footer {
     <div id="verses-list"></div>
   </div>
 
+
+  <!-- RECITER PANEL -->
+  <div id="reciter-panel">
+    <div class="reciter-panel-header">
+      <div class="reciter-panel-title">Choisir le récitateur — اختر القارئ</div>
+      <button class="panel-close" onclick="closeReciterPanel()">✕</button>
+    </div>
+    <div class="reciter-grid" id="reciter-grid"></div>
+  </div>
+
   <footer>
     <div style="font-family:'Noto Naskh Arabic',serif;font-size:1.2rem;color:var(--gold);margin-bottom:6px;">صَدَقَ اللَّهُ الْعَظِيمُ</div>
-    Allah le Très-Grand a dit la vérité · Récitation par Mishary Rashid Alafasy
+    Allah le Très-Grand a dit la vérité · Récitation par <span id='footer-reciter'>Mishary Rashid Alafasy</span>
   </footer>
 </div>
 
@@ -667,6 +737,7 @@ let translationFr = [];
 let translationEn = [];
 let transliteration = [];
 let showPhonetic = false;
+let currentReciter = 'ar.alafasy';
 let surahMeta = {};
 
 const audio = document.getElementById('audio-el');
@@ -787,6 +858,23 @@ const SURAHS = [
   {n:112,ar:'الإخلاص',en:'Al-Ikhlas',fr:'La Dévotion Pure',v:4,t:'Mecquoise'},
   {n:113,ar:'الفلق',en:'Al-Falaq',fr:'L\'Aube',v:5,t:'Mecquoise'},
   {n:114,ar:'الناس',en:'An-Nas',fr:'Les Hommes',v:6,t:'Mecquoise'},
+];
+
+
+/* ══ RECITERS ══ */
+const RECITERS = [
+  {id:'ar.alafasy',       name:'Mishary Alafasy',      ar:'مشاري العفاسي',       style:'Mujawwad — Koweït'},
+  {id:'ar.abdurrahmaansudais', name:'Abdurrahmaan Sudais', ar:'عبد الرحمن السديس', style:'Tarteel — Arabie Saoudite'},
+  {id:'ar.husary',        name:'Mahmoud Khalil Husary', ar:'محمود خليل الحصري',   style:'Murattal classique — Égypte'},
+  {id:'ar.minshawi',      name:'Mohamed Siddiq Minshawi',ar:'محمد صديق المنشاوي', style:'Mujawwad — Égypte'},
+  {id:'ar.abdullahbasfar',name:'Abdullah Basfar',       ar:'عبد الله بصفر',       style:'Murattal — Arabie Saoudite'},
+  {id:'ar.shaatree',      name:'Abu Bakr Ash-Shaatree', ar:'أبو بكر الشاطري',    style:'Tarteel — Arabie Saoudite'},
+  {id:'ar.mahermuaiqly',  name:'Maher Al-Muaiqly',      ar:'ماهر المعيقلي',       style:'Murattal — Arabie Saoudite'},
+  {id:'ar.parhizgar',     name:'Hossein Parhizgar',     ar:'حسين پرهيزگار',      style:'Murattal — Iran'},
+  {id:'ar.ibrahimakhbar', name:'Ibrahim Al-Akhdar',     ar:'إبراهيم الأخضر',     style:'Tarteel — Arabie Saoudite'},
+  {id:'ar.hanirifai',     name:'Hani Ar-Rifai',         ar:'هاني الرفاعي',        style:'Murattal — Arabie Saoudite'},
+  {id:'ar.muhammadayyoub',name:'Muhammad Ayyoub',        ar:'محمد أيوب',           style:'Tarteel — Arabie Saoudite'},
+  {id:'ar.muhammadjibreel',name:'Muhammad Jibreel',     ar:'محمد جبريل',          style:'Mujawwad — Égypte'},
 ];
 
 /* ══ INIT ══ */
@@ -942,7 +1030,7 @@ function playVerse(n) {
 
   // global verse number for Alafasy CDN
   const globalN = SURAHS.slice(0, currentSurah - 1).reduce((a, s) => a + s.v, 0) + n;
-  const url = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${globalN}.mp3`;
+  const url = `https://cdn.islamic.network/quran/audio/128/${currentReciter}/${globalN}.mp3`;
   audio.src = url;
   audio.play().then(() => { isPlaying = true; updatePlayBtn(); }).catch(() => {});
 }
@@ -1029,6 +1117,45 @@ function copyVerse(i) {
   const meta = SURAHS[currentSurah - 1];
   const text = `${arabic}\n\n${trans}\n\n— ${meta.ar} (${meta.en}), verset ${i+1}`;
   navigator.clipboard.writeText(text).catch(() => {});
+}
+
+
+/* ══ RECITER PANEL ══ */
+function renderReciterGrid() {
+  const grid = document.getElementById('reciter-grid');
+  grid.innerHTML = RECITERS.map(r => `
+    <div class="reciter-item ${r.id === currentReciter ? 'active' : ''}" onclick="selectReciter('${r.id}', '${r.name}')">
+      <div class="reciter-avatar">${r.ar.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+      <div>
+        <div class="reciter-name">${r.name}</div>
+        <div class="reciter-style">${r.style}</div>
+      </div>
+      <div class="reciter-check">✓</div>
+    </div>
+  `).join('');
+}
+
+function selectReciter(id, name) {
+  currentReciter = id;
+  const wasPlaying = isPlaying;
+  const verse = currentVerse;
+  stopAudio();
+  renderReciterGrid();
+  const footerEl = document.getElementById('footer-reciter');
+  if (footerEl) footerEl.textContent = name;
+  closeReciterPanel();
+  if (wasPlaying) setTimeout(() => playVerse(verse), 150);
+}
+
+function openReciterPanel() {
+  renderReciterGrid();
+  document.getElementById('reciter-panel').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeReciterPanel() {
+  document.getElementById('reciter-panel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
 }
 
 /* ══ UTILS ══ */
