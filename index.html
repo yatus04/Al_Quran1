@@ -595,6 +595,26 @@ body {
 .reciter-check { margin-left: auto; color: var(--gold); font-size: 0.9rem; display: none; }
 .reciter-item.active .reciter-check { display: block; }
 
+
+/* ── TOAST ── */
+#toast {
+  position: fixed;
+  bottom: 5rem; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-size: 0.8rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  z-index: 300;
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
 /* ── FOOTER ── */
 footer {
   text-align: center;
@@ -703,6 +723,8 @@ footer {
     <div id="verses-list"></div>
   </div>
 
+
+  <div id="toast"></div>
 
   <!-- RECITER PANEL -->
   <div id="reciter-panel">
@@ -863,18 +885,18 @@ const SURAHS = [
 
 /* ══ RECITERS ══ */
 const RECITERS = [
-  {id:'ar.alafasy',       name:'Mishary Alafasy',      ar:'مشاري العفاسي',       style:'Mujawwad — Koweït'},
-  {id:'ar.abdurrahmaansudais', name:'Abdurrahmaan Sudais', ar:'عبد الرحمن السديس', style:'Tarteel — Arabie Saoudite'},
-  {id:'ar.husary',        name:'Mahmoud Khalil Husary', ar:'محمود خليل الحصري',   style:'Murattal classique — Égypte'},
-  {id:'ar.minshawi',      name:'Mohamed Siddiq Minshawi',ar:'محمد صديق المنشاوي', style:'Mujawwad — Égypte'},
-  {id:'ar.abdullahbasfar',name:'Abdullah Basfar',       ar:'عبد الله بصفر',       style:'Murattal — Arabie Saoudite'},
-  {id:'ar.shaatree',      name:'Abu Bakr Ash-Shaatree', ar:'أبو بكر الشاطري',    style:'Tarteel — Arabie Saoudite'},
-  {id:'ar.mahermuaiqly',  name:'Maher Al-Muaiqly',      ar:'ماهر المعيقلي',       style:'Murattal — Arabie Saoudite'},
-  {id:'ar.parhizgar',     name:'Hossein Parhizgar',     ar:'حسين پرهيزگار',      style:'Murattal — Iran'},
-  {id:'ar.ibrahimakhbar', name:'Ibrahim Al-Akhdar',     ar:'إبراهيم الأخضر',     style:'Tarteel — Arabie Saoudite'},
-  {id:'ar.hanirifai',     name:'Hani Ar-Rifai',         ar:'هاني الرفاعي',        style:'Murattal — Arabie Saoudite'},
-  {id:'ar.muhammadayyoub',name:'Muhammad Ayyoub',        ar:'محمد أيوب',           style:'Tarteel — Arabie Saoudite'},
-  {id:'ar.muhammadjibreel',name:'Muhammad Jibreel',     ar:'محمد جبريل',          style:'Mujawwad — Égypte'},
+  {id:'ar.alafasy',         name:'Mishary Alafasy',         ar:'مشاري العفاسي',        style:'Mujawwad · Koweït'},
+  {id:'ar.abdurrahmaansudais', name:'Abdurrahmaan As-Sudais', ar:'عبد الرحمن السديس',  style:'Tarteel · Arabie Saoudite'},
+  {id:'ar.husary',          name:'Mahmoud Khalil Al-Husary',ar:'محمود خليل الحصري',    style:'Murattal classique · Égypte'},
+  {id:'ar.minshawi',        name:'Mohamed Siddiq Minshawi', ar:'محمد صديق المنشاوي',  style:'Mujawwad · Égypte'},
+  {id:'ar.abdullahbasfar',  name:'Abdullah Basfar',         ar:'عبد الله بصفر',        style:'Murattal · Arabie Saoudite'},
+  {id:'ar.shaatree',        name:'Abu Bakr Ash-Shaatree',   ar:'أبو بكر الشاطري',     style:'Tarteel · Arabie Saoudite'},
+  {id:'ar.mahermuaiqly',    name:'Maher Al-Muaiqly',        ar:'ماهر المعيقلي',        style:'Murattal · Arabie Saoudite'},
+  {id:'ar.ahmedajamy',      name:'Ahmed Al-Ajamy',          ar:'أحمد العجمي',          style:'Murattal · Arabie Saoudite'},
+  {id:'ar.hanirifai',       name:'Hani Ar-Rifai',           ar:'هاني الرفاعي',         style:'Murattal · Arabie Saoudite'},
+  {id:'ar.muhammadayyoub',  name:'Muhammad Ayyoub',         ar:'محمد أيوب',            style:'Tarteel · Arabie Saoudite'},
+  {id:'ar.muhammadjibreel', name:'Muhammad Jibreel',        ar:'محمد جبريل',           style:'Mujawwad · Égypte'},
+  {id:'ar.ibrahimakhbar',   name:'Ibrahim Al-Akhdar',       ar:'إبراهيم الأخضر',      style:'Tarteel · Arabie Saoudite'},
 ];
 
 /* ══ INIT ══ */
@@ -1032,6 +1054,16 @@ function playVerse(n) {
   const globalN = SURAHS.slice(0, currentSurah - 1).reduce((a, s) => a + s.v, 0) + n;
   const url = `https://cdn.islamic.network/quran/audio/128/${currentReciter}/${globalN}.mp3`;
   audio.src = url;
+  audio.onerror = null;
+  audio.onerror = () => {
+    if (currentReciter !== 'ar.alafasy') {
+      const fallbackUrl = `https://cdn.islamic.network/quran/audio/128/ar.alafasy/${globalN}.mp3`;
+      audio.onerror = null;
+      audio.src = fallbackUrl;
+      audio.play().then(() => { isPlaying = true; updatePlayBtn(); }).catch(() => {});
+      showToast('Audio indisponible pour ce récitateur · Alafasy par défaut');
+    }
+  };
   audio.play().then(() => { isPlaying = true; updatePlayBtn(); }).catch(() => {});
 }
 
@@ -1156,6 +1188,13 @@ function openReciterPanel() {
 function closeReciterPanel() {
   document.getElementById('reciter-panel').classList.remove('open');
   document.getElementById('overlay').classList.remove('show');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
 /* ══ UTILS ══ */
