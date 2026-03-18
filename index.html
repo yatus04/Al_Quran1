@@ -615,6 +615,134 @@ body {
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+
+/* ── VERSET DU JOUR ── */
+#vod-banner {
+  max-width: 900px; margin: 1.5rem auto 0;
+  padding: 0 1.5rem;
+}
+.vod-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 1.5rem 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.vod-card::before {
+  content: '';
+  position: absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, var(--gold3), var(--gold), var(--gold3));
+}
+.vod-label {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.65rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold3);
+  margin-bottom: 1rem;
+}
+.vod-arabic {
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+  direction: rtl; text-align: right;
+  line-height: 2; color: var(--text);
+  margin-bottom: 0.8rem;
+}
+.vod-translation {
+  font-style: italic; font-size: 0.92rem;
+  color: var(--text2); line-height: 1.7;
+  margin-bottom: 0.8rem;
+}
+.vod-phonetic {
+  font-size: 0.88rem; color: var(--emerald2);
+  line-height: 1.7; margin-bottom: 1rem;
+  display: none;
+}
+.vod-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.vod-ref {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.65rem; color: var(--gold3);
+  margin-left: auto;
+}
+
+/* ── RÉPÉTITION ── */
+.repeat-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0.5rem 0; flex-wrap: wrap;
+}
+.repeat-label {
+  font-size: 0.78rem; color: var(--text3);
+  font-family: 'Crimson Pro', serif;
+}
+.repeat-opts { display: flex; gap: 4px; }
+.rep-btn {
+  width: 32px; height: 28px;
+  background: var(--bg4); border: 1px solid var(--border);
+  border-radius: 3px; color: var(--text3);
+  font-size: 0.75rem; cursor: pointer;
+  transition: all 0.2s; font-family: 'Crimson Pro', serif;
+}
+.rep-btn:hover { border-color: var(--gold3); color: var(--gold); }
+.rep-btn.active { background: rgba(200,169,110,0.12); border-color: var(--gold); color: var(--gold); }
+.rep-counter {
+  font-size: 0.72rem; color: var(--gold);
+  min-width: 60px;
+  font-family: 'Cinzel Decorative', serif;
+  display: none;
+}
+.rep-counter.show { display: inline; }
+
+/* ── PARTAGE IMAGE ── */
+#share-modal-wrap {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 400;
+  align-items: center; justify-content: center;
+}
+#share-modal-wrap.open { display: flex; }
+#share-modal {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  width: min(480px, 92vw);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.share-modal-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.75rem; letter-spacing: 0.15em;
+  color: var(--gold); margin-bottom: 1.2rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+#share-canvas-wrap {
+  border-radius: 6px; overflow: hidden;
+  margin-bottom: 1rem; border: 1px solid var(--border);
+}
+#share-canvas { display: block; width: 100%; height: auto; }
+.share-themes {
+  display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap;
+}
+.theme-btn {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 3px; font-size: 0.75rem;
+  cursor: pointer; color: var(--text2);
+  background: var(--bg3); transition: all 0.2s;
+  font-family: 'Crimson Pro', serif;
+}
+.theme-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(200,169,110,0.08); }
+.share-dl-btn {
+  width: 100%; padding: 0.7rem;
+  background: rgba(200,169,110,0.12);
+  border: 1px solid var(--gold);
+  border-radius: 4px; color: var(--gold);
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.7rem; letter-spacing: 0.1em;
+  cursor: pointer; transition: all 0.2s;
+}
+.share-dl-btn:hover { background: rgba(200,169,110,0.2); }
+
 /* ── FOOTER ── */
 footer {
   text-align: center;
@@ -704,6 +832,17 @@ footer {
       <span class="time-label" id="t-total">0:00</span>
     </div>
     <button class="icon-btn" title="Choisir le récitateur" onclick="openReciterPanel()" id="reciter-btn" style="font-size:0.7rem;letter-spacing:0.04em;width:auto;padding:0 10px;font-family:'Crimson Pro',serif;">🎙 Récitateur</button>
+    <div class="repeat-bar">
+      <span class="repeat-label">🔁</span>
+      <div class="repeat-opts">
+        <button class="rep-btn" onclick="setRepeat(1)">1×</button>
+        <button class="rep-btn" onclick="setRepeat(2)">2×</button>
+        <button class="rep-btn" onclick="setRepeat(3)">3×</button>
+        <button class="rep-btn" onclick="setRepeat(5)">5×</button>
+        <button class="rep-btn" onclick="setRepeat(10)">10×</button>
+      </div>
+      <span class="rep-counter" id="rep-counter"></span>
+    </div>
     <div class="autoplay-toggle" onclick="toggleAutoplay()" title="Lecture continue">
       <div class="toggle-switch on" id="autoplay-sw"><div class="toggle-knob"></div></div>
       <span id="autoplay-label">Auto</span>
@@ -718,6 +857,23 @@ footer {
     <div class="surah-meta" id="s-meta">Mecquoise · 7 versets</div>
     <div class="ornament-line"></div>
     <div class="bismillah" id="bismillah-line">بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ</div>
+  </div>
+
+
+  <!-- VERSET DU JOUR -->
+  <div id="vod-banner">
+    <div class="vod-card" id="vod-card">
+      <div class="vod-label">Verset du Jour — آية اليوم</div>
+      <div class="vod-arabic" id="vod-ar">جاري التحميل...</div>
+      <div class="vod-phonetic" id="vod-ph"></div>
+      <div class="vod-translation" id="vod-tr"></div>
+      <div class="vod-actions">
+        <button class="v-btn" id="vod-play-btn" onclick="playVod()">▶ Écouter</button>
+        <button class="v-btn" onclick="document.getElementById('vod-ph').style.display = document.getElementById('vod-ph').style.display==='block'?'none':'block'">ABC</button>
+        <button class="v-btn" onclick="openShareModal('vod')">⬡ Partager</button>
+        <span class="vod-ref" id="vod-ref"></span>
+      </div>
+    </div>
   </div>
 
   <!-- VERSES -->
@@ -906,6 +1062,7 @@ const RECITERS = [
 window.addEventListener('load', () => {
   renderSurahList();
   loadSurah(1);
+  loadVod();
   // hide greeting after animation
   setTimeout(() => { document.getElementById('greeting').classList.add('hide'); }, 4400);
 });
@@ -1003,6 +1160,7 @@ function renderVerses() {
       <div class="verse-actions">
         <button class="v-btn" id="vbtn-${v.numberInSurah}" onclick="event.stopPropagation();playVerse(${v.numberInSurah})">▶ Écouter</button>
         <button class="v-btn" onclick="event.stopPropagation();copyVerse(${i})">⎘ Copier</button>
+        <button class="v-btn" onclick="event.stopPropagation();currentVerse=${v.numberInSurah};openShareModal('verse')">⬡ Partager</button>
       </div>
     </div>`;
   }).join('');
@@ -1200,10 +1358,259 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+
+/* ══ VERSET DU JOUR ══ */
+let vodData = null;
+let vodGlobalN = 0;
+
+async function loadVod() {
+  const today = new Date();
+  const seed = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
+  const totalAyahs = 6236;
+  const n = (seed % totalAyahs) + 1;
+
+  // find surah + ayah from global number
+  let surahN = 1, ayahN = n;
+  let cumul = 0;
+  for (let i = 0; i < SURAHS.length; i++) {
+    if (cumul + SURAHS[i].v >= n) { surahN = i+1; ayahN = n - cumul; break; }
+    cumul += SURAHS[i].v;
+  }
+  vodGlobalN = n;
+
+  try {
+    const [arRes, frRes, phRes] = await Promise.all([
+      fetch(`https://api.alquran.cloud/v1/ayah/${n}`),
+      fetch(`https://api.alquran.cloud/v1/ayah/${n}/fr.hamidullah`),
+      fetch(`https://api.alquran.cloud/v1/ayah/${n}/en.transliteration`),
+    ]);
+    const [arData, frData, phData] = await Promise.all([arRes.json(), frRes.json(), phRes.json()]);
+    vodData = { ar: arData.data.text, fr: frData.data.text, ph: phData.data.text, surah: surahN, ayah: ayahN };
+
+    document.getElementById('vod-ar').textContent = vodData.ar;
+    document.getElementById('vod-tr').textContent = vodData.fr;
+    document.getElementById('vod-ph').textContent = vodData.ph;
+    const meta = SURAHS[surahN-1];
+    document.getElementById('vod-ref').textContent = `${meta.ar} · ${ayahN}`;
+  } catch(e) {
+    document.getElementById('vod-ar').textContent = 'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ';
+    document.getElementById('vod-tr').textContent = 'Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux.';
+  }
+}
+
+function playVod() {
+  const btn = document.getElementById('vod-play-btn');
+  if (audio.src && audio.src.includes('/'+vodGlobalN+'.mp3') && isPlaying) {
+    audio.pause(); isPlaying = false; updatePlayBtn();
+    btn.textContent = '▶ Écouter'; return;
+  }
+  stopAudio();
+  const url = `https://cdn.islamic.network/quran/audio/128/${currentReciter}/${vodGlobalN}.mp3`;
+  audio.src = url;
+  audio.play().then(() => { isPlaying = true; updatePlayBtn(); btn.textContent = '⏸ En cours'; }).catch(()=>{});
+  audio.onended = () => { btn.textContent = '▶ Écouter'; isPlaying = false; updatePlayBtn(); };
+}
+
+/* ══ RÉPÉTITION HIFZ ══ */
+let repeatCount = 1;
+let repeatCurrent = 0;
+
+function setRepeat(n) {
+  repeatCount = n;
+  document.querySelectorAll('.rep-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const counter = document.getElementById('rep-counter');
+  if (n === 1) { counter.classList.remove('show'); counter.textContent = ''; }
+  else { counter.classList.add('show'); counter.textContent = `0/${n}`; }
+}
+
+const _origEnded = audio.onended;
+audio.addEventListener('ended', () => {
+  isPlaying = false; updatePlayBtn();
+  if (repeatCount > 1) {
+    repeatCurrent++;
+    const counter = document.getElementById('rep-counter');
+    if (repeatCurrent < repeatCount) {
+      counter.textContent = `${repeatCurrent}/${repeatCount}`;
+      setTimeout(() => playVerse(currentVerse), 600);
+      return;
+    } else {
+      repeatCurrent = 0;
+      counter.textContent = `✓ ${repeatCount}/${repeatCount}`;
+      setTimeout(() => { counter.textContent = `0/${repeatCount}`; }, 2000);
+    }
+  }
+  if (autoplay) nextVerse();
+});
+
+/* ══ PARTAGE IMAGE ══ */
+let shareTheme = 'dark';
+let shareVerseData = null;
+
+const SHARE_THEMES = {
+  dark:  { bg: '#0D0B07', bg2: '#1A1710', gold: '#C8A96E', text: '#EAE0C8', text2: '#A89B7A', border: 'rgba(200,169,110,0.4)' },
+  light: { bg: '#F5EDD8', bg2: '#EDE4C8', gold: '#8B6F3A', text: '#1C1A14', text2: '#5A4E35', border: 'rgba(139,111,58,0.4)' },
+  green: { bg: '#0D1F16', bg2: '#1B3526', gold: '#40916C', text: '#D4EDE1', text2: '#8FC4A8', border: 'rgba(64,145,108,0.5)' },
+};
+
+async function openShareModal(source) {
+  if (source === 'vod') {
+    if (!vodData) return;
+    shareVerseData = { ar: vodData.ar, tr: vodData.fr, ref: `${SURAHS[vodData.surah-1].ar} — ${vodData.surah}:${vodData.ayah}` };
+  } else {
+    // current playing verse
+    const i = currentVerse - 1;
+    if (!versesData.length) return;
+    const tr = currentLang === 'fr' ? (translationFr[i]?.text || '') : (translationEn[i]?.text || '');
+    const meta = SURAHS[currentSurah-1];
+    shareVerseData = { ar: versesData[i].text, tr, ref: `${meta.ar} — ${currentSurah}:${currentVerse}` };
+  }
+  document.getElementById('share-modal-wrap').classList.add('open');
+  renderShareCanvas();
+}
+
+function closeShareModal() {
+  document.getElementById('share-modal-wrap').classList.remove('open');
+}
+
+function setShareTheme(t, btn) {
+  shareTheme = t;
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderShareCanvas();
+}
+
+function renderShareCanvas() {
+  const canvas = document.getElementById('share-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 1080, H = 1080;
+  canvas.width = W; canvas.height = H;
+  const T = SHARE_THEMES[shareTheme];
+  if (!shareVerseData) return;
+
+  // Background
+  ctx.fillStyle = T.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Inner card
+  const pad = 60;
+  ctx.fillStyle = T.bg2;
+  roundRect(ctx, pad, pad, W-pad*2, H-pad*2, 24);
+  ctx.fill();
+
+  // Border
+  ctx.strokeStyle = T.border;
+  ctx.lineWidth = 2;
+  roundRect(ctx, pad, pad, W-pad*2, H-pad*2, 24);
+  ctx.stroke();
+
+  // Top gold line
+  ctx.fillStyle = T.gold;
+  roundRect(ctx, pad, pad, W-pad*2, 6, 3);
+  ctx.fill();
+
+  // Bismillah ornament
+  ctx.font = '500 52px "Noto Naskh Arabic"';
+  ctx.fillStyle = T.gold;
+  ctx.textAlign = 'center';
+  ctx.fillText('﷽', W/2, 185);
+
+  // Divider
+  ctx.strokeStyle = T.border;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(200, 220); ctx.lineTo(W-200, 220); ctx.stroke();
+
+  // Arabic text (wrapped)
+  ctx.font = '600 58px "Noto Naskh Arabic"';
+  ctx.fillStyle = T.text;
+  ctx.textAlign = 'center';
+  const arLines = wrapText(ctx, shareVerseData.ar, W - 200);
+  let arY = 340 - (arLines.length - 1) * 35;
+  arLines.forEach(line => { ctx.fillText(line, W/2, arY); arY += 90; });
+
+  // Divider 2
+  ctx.strokeStyle = T.border;
+  ctx.beginPath(); ctx.moveTo(200, arY + 20); ctx.lineTo(W-200, arY + 20); ctx.stroke();
+
+  // Translation (wrapped)
+  ctx.font = 'italic 36px Georgia, serif';
+  ctx.fillStyle = T.text2;
+  ctx.textAlign = 'center';
+  const trLines = wrapText(ctx, shareVerseData.tr, W - 200, 36);
+  let trY = arY + 80;
+  trLines.forEach(line => { ctx.fillText(line, W/2, trY); trY += 52; });
+
+  // Reference
+  ctx.font = '500 32px "Noto Naskh Arabic"';
+  ctx.fillStyle = T.gold;
+  ctx.textAlign = 'center';
+  ctx.fillText('— ' + shareVerseData.ref + ' —', W/2, H - 160);
+
+  // Site URL
+  ctx.font = '28px Georgia, serif';
+  ctx.fillStyle = T.border;
+  ctx.textAlign = 'center';
+  ctx.fillText('al-quran1.vercel.app', W/2, H - 110);
+}
+
+function wrapText(ctx, text, maxWidth, fontSize) {
+  fontSize = fontSize || 58;
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  for (let w of words) {
+    const test = line ? line + ' ' + w : w;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line); line = w;
+    } else { line = test; }
+  }
+  if (line) lines.push(line);
+  return lines.slice(0, 5);
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.arcTo(x+w, y, x+w, y+r, r);
+  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
+  ctx.lineTo(x+r, y+h); ctx.arcTo(x, y+h, x, y+h-r, r);
+  ctx.lineTo(x, y+r); ctx.arcTo(x, y, x+r, y, r);
+  ctx.closePath();
+}
+
+function downloadShareImage() {
+  renderShareCanvas();
+  const canvas = document.getElementById('share-canvas');
+  const link = document.createElement('a');
+  link.download = 'verset-quran.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
 /* ══ UTILS ══ */
 function toArabicNum(n) {
   return n.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 }
 </script>
+
+<!-- SHARE MODAL -->
+<div id="share-modal-wrap" onclick="if(event.target===this)closeShareModal()">
+  <div id="share-modal">
+    <div class="share-modal-title">
+      <span>PARTAGER LE VERSET</span>
+      <button style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.1rem" onclick="closeShareModal()">✕</button>
+    </div>
+    <div id="share-canvas-wrap">
+      <canvas id="share-canvas" width="1080" height="1080"></canvas>
+    </div>
+    <div class="share-themes" id="share-themes">
+      <button class="theme-btn active" onclick="setShareTheme('dark',this)">🌙 Nuit dorée</button>
+      <button class="theme-btn" onclick="setShareTheme('light',this)">☀️ Parchemin</button>
+      <button class="theme-btn" onclick="setShareTheme('green',this)">🌿 Vert émeraude</button>
+    </div>
+    <button class="share-dl-btn" onclick="downloadShareImage()">⬇ Télécharger l'image</button>
+  </div>
+</div>
+
 </body>
 </html>
