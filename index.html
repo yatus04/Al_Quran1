@@ -532,7 +532,7 @@ body {
   display: none;
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.5);
-  z-index: 150;
+  z-index: 250;
 }
 #overlay.show { display: block; }
 
@@ -543,7 +543,7 @@ body {
   bottom: 0; left: 0; right: 0;
   background: var(--bg2);
   border-top: 1px solid var(--border2);
-  z-index: 200;
+  z-index: 300;
   transform: translateY(110%);
   transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
   padding: 1.2rem 1.5rem 2rem;
@@ -657,6 +657,18 @@ footer {
 </div>
 <div id="overlay" onclick="closePanel();closeReciterPanel();"></div>
 
+<!-- RECITER PANEL -->
+<div id="reciter-panel">
+  <div class="reciter-panel-header">
+    <div class="reciter-panel-title">Choisir le récitateur — اختر القارئ</div>
+    <button class="panel-close" onclick="closeReciterPanel()">✕</button>
+  </div>
+  <div class="reciter-grid" id="reciter-grid"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
 <!-- APP -->
 <div id="app">
 
@@ -725,15 +737,6 @@ footer {
 
 
   <div id="toast"></div>
-
-  <!-- RECITER PANEL -->
-  <div id="reciter-panel">
-    <div class="reciter-panel-header">
-      <div class="reciter-panel-title">Choisir le récitateur — اختر القارئ</div>
-      <button class="panel-close" onclick="closeReciterPanel()">✕</button>
-    </div>
-    <div class="reciter-grid" id="reciter-grid"></div>
-  </div>
 
   <footer>
     <div style="font-family:'Noto Naskh Arabic',serif;font-size:1.2rem;color:var(--gold);margin-bottom:6px;">صَدَقَ اللَّهُ الْعَظِيمُ</div>
@@ -1156,8 +1159,8 @@ function copyVerse(i) {
 function renderReciterGrid() {
   const grid = document.getElementById('reciter-grid');
   grid.innerHTML = RECITERS.map(r => `
-    <div class="reciter-item ${r.id === currentReciter ? 'active' : ''}" onclick="selectReciter('${r.id}', '${r.name}')">
-      <div class="reciter-avatar">${r.ar.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+    <div class="reciter-item ${r.id === currentReciter ? 'active' : ''}" data-id="${r.id}" data-name="${r.name}" onclick="selectReciter(this.dataset.id, this.dataset.name)">
+      <div class="reciter-avatar">${r.ar.split('\u0020').map(w=>w[0]).join('').slice(0,2)}</div>
       <div>
         <div class="reciter-name">${r.name}</div>
         <div class="reciter-style">${r.style}</div>
