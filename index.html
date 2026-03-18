@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Yatus — Dakar, Sénégal">
+<meta name="description" content="Al-Quran Al-Karim — 114 sourates complètes avec audio, traduction française et anglaise.">
 <title>القرآن الكريم — Al-Quran Al-Karim</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -22,11 +24,11 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 @keyframes gOut{to{opacity:0;pointer-events:none}}
 
 /* TOPBAR */
-#topbar{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--bd);padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;flex-wrap:nowrap;}
+#topbar{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--bd);padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
 .logo-ar{font-family:'Noto Naskh Arabic',serif;font-size:1.4rem;font-weight:700;color:var(--gold);line-height:1;}
 .logo-sub{font-family:'Cinzel Decorative',serif;font-size:.55rem;color:var(--tx3);letter-spacing:.1em;}
 .tsp{flex:1;}
-.ssel{background:var(--bg3);border:1px solid var(--bd);color:var(--tx);font-family:'Crimson Pro',serif;font-size:.85rem;padding:.4rem .8rem;border-radius:var(--r);outline:none;cursor:pointer;max-width:230px;flex-shrink:1;transition:border-color .2s;}
+.ssel{background:var(--bg3);border:1px solid var(--bd);color:var(--tx);font-family:'Crimson Pro',serif;font-size:.85rem;padding:.4rem .8rem;border-radius:var(--r);outline:none;cursor:pointer;max-width:230px;transition:border-color .2s;}
 .ssel:focus{border-color:var(--gold3);}
 .lsw{display:flex;gap:3px;}
 .lb{background:var(--bg4);border:1px solid var(--bd);color:var(--tx3);font-family:'Crimson Pro',serif;font-size:.72rem;padding:3px 9px;border-radius:3px;cursor:pointer;transition:all .2s;}
@@ -34,12 +36,12 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .lb.on{background:var(--em2);border-color:var(--em);color:var(--gold2);}
 .ibtn{background:var(--bg3);border:1px solid var(--bd);color:var(--tx2);width:34px;height:34px;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:all .2s;flex-shrink:0;}
 .ibtn:hover{border-color:var(--bd2);color:var(--gold);}
-@media(max-width:600px){.ssel{max-width:130px;font-size:.8rem;}#topbar{padding:.6rem .8rem;gap:.5rem;}}
+@media(max-width:600px){.ssel{max-width:130px;font-size:.78rem;}#topbar{gap:.4rem;padding:.6rem .8rem;}}
 
 /* PLAYER BAR */
 #pbar{position:sticky;top:53px;z-index:90;background:var(--bg3);border-bottom:1px solid var(--bd);padding:.5rem 1.2rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;}
 .pinfo{font-family:'Noto Naskh Arabic',serif;font-size:.95rem;color:var(--gold);min-width:50px;text-align:right;direction:rtl;}
-.pctrls{display:flex;gap:5px;align-items:center;}
+.pctrls{display:flex;gap:5px;}
 .ctrl{background:transparent;border:1px solid var(--bd2);color:var(--gold);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem;transition:all .2s;}
 .ctrl:hover{background:rgba(200,169,110,.1);}
 .ctrl.big{width:36px;height:36px;font-size:.9rem;}
@@ -123,7 +125,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .sli.on{background:rgba(200,169,110,.1);}
 .slin{font-size:.68rem;color:var(--tx3);min-width:20px;text-align:center;}
 .sliar{font-family:'Noto Naskh Arabic',serif;font-size:1.05rem;color:var(--gold);direction:rtl;flex:1;text-align:right;}
-.slien{font-size:.75rem;color:var(--tx2);max-width:105px;text-align:left;}
+.slien{font-size:.75rem;color:var(--tx2);max-width:105px;}
 
 /* RECITER PANEL */
 #rpanel{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bd2);z-index:300;transform:translateY(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);padding:1.1rem 1.3rem 2.5rem;max-height:68vh;overflow-y:auto;}
@@ -136,9 +138,9 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .ritem.on{border-color:var(--gold);background:rgba(200,169,110,.08);}
 .rav{width:34px;height:34px;border-radius:50%;background:var(--bg4);border:1px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-family:'Noto Naskh Arabic',serif;font-size:.8rem;color:var(--gold);flex-shrink:0;}
 .ritem.on .rav{background:rgba(200,169,110,.15);border-color:var(--gold);}
-.rname{font-size:.8rem;color:var(--tx);line-height:1.3;}
-.rstyle{font-size:.68rem;color:var(--tx3);margin-top:1px;font-style:italic;}
-.rchk{margin-left:auto;color:var(--gold);font-size:.85rem;display:none;}
+.rname{font-size:.8rem;color:var(--tx);}
+.rstyle{font-size:.68rem;color:var(--tx3);font-style:italic;}
+.rchk{margin-left:auto;color:var(--gold);display:none;}
 .ritem.on .rchk{display:block;}
 
 /* SHARE MODAL */
@@ -154,6 +156,34 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .shdl{width:100%;padding:.65rem;background:rgba(200,169,110,.1);border:1px solid var(--gold);border-radius:4px;color:var(--gold);font-family:'Cinzel Decorative',serif;font-size:.65rem;letter-spacing:.1em;cursor:pointer;transition:all .2s;}
 .shdl:hover{background:rgba(200,169,110,.2);}
 
+/* VIDEO MODAL */
+#vidwrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:410;align-items:center;justify-content:center;}
+#vidwrap.open{display:flex;}
+#vidmodal{background:var(--bg2);border:1px solid var(--bd2);border-radius:8px;padding:1.4rem;width:min(520px,95vw);max-height:93vh;overflow-y:auto;}
+.vidttl{font-family:'Cinzel Decorative',serif;font-size:.65rem;letter-spacing:.14em;color:var(--gold);margin-bottom:1.1rem;display:flex;justify-content:space-between;align-items:center;}
+.vsec{margin-bottom:1rem;}
+.vlbl{font-size:.68rem;color:var(--tx3);font-family:'Cinzel Decorative',serif;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;}
+.vopts{display:flex;gap:6px;flex-wrap:wrap;}
+.vopt{padding:5px 13px;border:1px solid var(--bd);border-radius:3px;font-size:.78rem;cursor:pointer;color:var(--tx2);background:var(--bg3);transition:all .2s;font-family:'Crimson Pro',serif;}
+.vopt:hover{border-color:var(--gold3);color:var(--gold);}
+.vopt.on{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1);}
+.vprev-wrap{border-radius:6px;overflow:hidden;margin-bottom:.9rem;border:1px solid var(--bd);background:#000;display:flex;align-items:center;justify-content:center;min-height:180px;}
+#vprev{display:block;max-width:100%;max-height:300px;}
+.vprog{display:none;margin-bottom:.9rem;}
+.vprog.show{display:block;}
+.vprogbar{height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:.4rem;}
+.vprogfill{height:100%;background:var(--gold);border-radius:3px;width:0%;transition:width .15s;}
+.vproglbl{font-size:.7rem;color:var(--tx3);text-align:center;}
+.vacts2{display:flex;gap:8px;}
+.vact-btn{flex:1;padding:.65rem;border:1px solid var(--gold);border-radius:4px;color:var(--gold);font-family:'Cinzel Decorative',serif;font-size:.6rem;letter-spacing:.06em;cursor:pointer;transition:all .2s;background:rgba(200,169,110,.08);}
+.vact-btn:hover{background:rgba(200,169,110,.18);}
+.vact-btn:disabled{opacity:.4;cursor:not-allowed;}
+.vact-btn.sec{background:transparent;border-color:var(--bd2);color:var(--tx2);}
+.vact-btn.sec:hover{border-color:var(--gold3);color:var(--gold);}
+.vrange-row{display:flex;align-items:center;gap:10px;}
+.vrange{width:100%;accent-color:var(--gold);}
+.vrange-val{font-size:.78rem;color:var(--gold);min-width:35px;font-family:'Cinzel Decorative',serif;}
+
 /* OVERLAY */
 #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:250;}
 #overlay.show{display:block;}
@@ -163,7 +193,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* FOOTER */
-footer{text-align:center;padding:1.3rem;color:var(--tx3);font-size:.78rem;font-style:italic;border-top:1px solid var(--bd);position:relative;z-index:1;}
+footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-style:italic;border-top:1px solid var(--bd);position:relative;z-index:1;}
 </style>
 </head>
 <body>
@@ -176,7 +206,7 @@ footer{text-align:center;padding:1.3rem;color:var(--tx3);font-size:.78rem;font-s
   <div class="gline"></div>
 </div>
 
-<!-- PANELS + OVERLAY (hors #app) -->
+<!-- SIDE PANEL (sourates) -->
 <div id="spanel">
   <div class="phdr">
     <div class="ptitle">الفهرس — Sourates</div>
@@ -186,6 +216,7 @@ footer{text-align:center;padding:1.3rem;color:var(--tx3);font-size:.78rem;font-s
   <div class="slist" id="slist"></div>
 </div>
 
+<!-- RECITER PANEL -->
 <div id="rpanel">
   <div class="rphdr">
     <div class="rptitle">Choisir le récitateur — اختر القارئ</div>
@@ -194,13 +225,14 @@ footer{text-align:center;padding:1.3rem;color:var(--tx3);font-size:.78rem;font-s
   <div class="rpgrid" id="rpgrid"></div>
 </div>
 
+<!-- OVERLAY -->
 <div id="overlay" onclick="closePanel();closeRec();"></div>
 
-<!-- SHARE MODAL -->
+<!-- SHARE IMAGE MODAL -->
 <div id="sharewrap" onclick="if(event.target===this)closeShare()">
   <div id="sharemodal">
     <div class="shttl">
-      <span>PARTAGER LE VERSET</span>
+      <span>⬡ PARTAGER LE VERSET</span>
       <button style="background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem" onclick="closeShare()">✕</button>
     </div>
     <div id="shcanvas-wrap"><canvas id="shcanvas" width="1080" height="1080"></canvas></div>
@@ -209,18 +241,91 @@ footer{text-align:center;padding:1.3rem;color:var(--tx3);font-size:.78rem;font-s
       <button class="thbtn" onclick="setShareTheme('light',this)">☀️ Parchemin</button>
       <button class="thbtn" onclick="setShareTheme('green',this)">🌿 Émeraude</button>
     </div>
-    <button class="shdl" onclick="dlShare()">⬇ Télécharger l'image PNG</button>
+    <button class="shdl" onclick="dlShare()">⬇ Télécharger PNG</button>
   </div>
 </div>
 
+<!-- VIDEO MODAL -->
+<div id="vidwrap" onclick="if(event.target===this)closeVid()">
+  <div id="vidmodal">
+    <div class="vidttl">
+      <span>🎬 CRÉER UNE VIDÉO</span>
+      <button style="background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem" onclick="closeVid()">✕</button>
+    </div>
+
+    <div class="vsec">
+      <div class="vlbl">Ratio / Format</div>
+      <div class="vopts">
+        <button class="vopt on" data-w="1080" data-h="1920" onclick="setVO('ratio',this)">📱 9:16 Stories</button>
+        <button class="vopt" data-w="1080" data-h="1080" onclick="setVO('ratio',this)">⬜ 1:1 Instagram</button>
+        <button class="vopt" data-w="1920" data-h="1080" onclick="setVO('ratio',this)">🖥 16:9 YouTube</button>
+        <button class="vopt" data-w="1080" data-h="1350" onclick="setVO('ratio',this)">📸 4:5 Feed</button>
+      </div>
+    </div>
+
+    <div class="vsec">
+      <div class="vlbl">Thème visuel</div>
+      <div class="vopts">
+        <button class="vopt on" data-t="dark" onclick="setVO('theme',this)">🌙 Nuit dorée</button>
+        <button class="vopt" data-t="light" onclick="setVO('light',this)">☀️ Parchemin</button>
+        <button class="vopt" data-t="green" onclick="setVO('theme',this)">🌿 Émeraude</button>
+        <button class="vopt" data-t="blue" onclick="setVO('theme',this)">🌊 Nuit bleue</button>
+      </div>
+    </div>
+
+    <div class="vsec">
+      <div class="vlbl">Animation</div>
+      <div class="vopts">
+        <button class="vopt on" data-a="fade" onclick="setVO('anim',this)">✨ Fondu</button>
+        <button class="vopt" data-a="slide" onclick="setVO('anim',this)">➡️ Glissement</button>
+        <button class="vopt" data-a="typewriter" onclick="setVO('anim',this)">⌨️ Machine à écrire</button>
+        <button class="vopt" data-a="zoom" onclick="setVO('anim',this)">🔍 Zoom</button>
+      </div>
+    </div>
+
+    <div class="vsec">
+      <div class="vlbl">Contenu</div>
+      <div class="vopts">
+        <button class="vopt on" data-c="ar+tr" onclick="setVO('content',this)">🌐 Arabe + Traduction</button>
+        <button class="vopt" data-c="ar" onclick="setVO('content',this)">عربي Arabe seul</button>
+        <button class="vopt" data-c="ar+ph" onclick="setVO('content',this)">ABC Arabe + Phonétique</button>
+      </div>
+    </div>
+
+    <div class="vsec">
+      <div class="vlbl">Durée</div>
+      <div class="vrange-row">
+        <input type="range" class="vrange" id="vdur" min="5" max="30" value="10" step="1"
+          oninput="vidCfg.dur=+this.value;document.getElementById('vdur-val').textContent=this.value+'s';prevVid()">
+        <span class="vrange-val" id="vdur-val">10s</span>
+      </div>
+    </div>
+
+    <div class="vprev-wrap">
+      <canvas id="vprev"></canvas>
+    </div>
+
+    <div class="vprog" id="vprog">
+      <div class="vprogbar"><div class="vprogfill" id="vprogfill"></div></div>
+      <div class="vproglbl" id="vproglbl">Génération en cours...</div>
+    </div>
+
+    <div class="vacts2">
+      <button class="vact-btn sec" onclick="prevVid()">👁 Aperçu</button>
+      <button class="vact-btn" id="vgenbtn" onclick="genVid()">⬇ Générer & Télécharger</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
 <div id="toast"></div>
 
 <!-- APP -->
-<div id="app">
+<div id="app" style="position:relative;z-index:1;min-height:100vh;">
 
   <!-- TOPBAR -->
   <div id="topbar">
-    <button class="ibtn" onclick="openPanel()" title="Sourates">☰</button>
+    <button class="ibtn" onclick="openPanel()">☰</button>
     <div>
       <div class="logo-ar">القرآن</div>
       <div class="logo-sub">Al-Quran Al-Karim</div>
@@ -232,7 +337,7 @@ footer{text-align:center;padding:1.3rem;color:var(--tx3);font-size:.78rem;font-s
       <button class="lb" id="lben" onclick="setLang('en')">EN</button>
       <button class="lb" id="lbph" onclick="togglePhon()">ABC</button>
     </div>
-    <button class="ibtn" id="thbtn" onclick="toggleTheme()" title="Thème">🌙</button>
+    <button class="ibtn" id="thbtn" onclick="toggleTheme()">🌙</button>
   </div>
 
   <!-- PLAYER BAR -->
@@ -285,8 +390,9 @@ footer{text-align:center;padding:1.3rem;color:var(--tx3);font-size:.78rem;font-s
       <div class="vodtr" id="vodtr"></div>
       <div class="vodacts">
         <button class="vbtn" id="vodplaybtn" onclick="playVod()">▶ Écouter</button>
-        <button class="vbtn" onclick="toggleVodPh()">ABC Phonétique</button>
-        <button class="vbtn" onclick="openShare('vod')">⬡ Partager</button>
+        <button class="vbtn" onclick="toggleVodPh()">ABC</button>
+        <button class="vbtn" onclick="openShare('vod')">⬡ Image</button>
+        <button class="vbtn" onclick="openVid('vod')">🎬 Vidéo</button>
         <span class="vodref" id="vodref"></span>
       </div>
     </div>
@@ -310,20 +416,24 @@ footer{text-align:center;padding:1.3rem;color:var(--tx3);font-size:.78rem;font-s
   <footer>
     <div style="font-family:'Noto Naskh Arabic',serif;font-size:1.1rem;color:var(--gold);margin-bottom:5px;">صَدَقَ اللَّهُ الْعَظِيمُ</div>
     Allah le Très-Grand a dit la vérité · <span id="frec">Mishary Rashid Alafasy</span>
+    <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--bd);">
+      Conçu avec ❤️ par <strong style="color:var(--gold)">Yatus</strong> — Dakar, Sénégal
+      <br><span style="font-size:.72rem;">© 2025 al-quran1.vercel.app</span>
+    </div>
   </footer>
 </div>
 
 <audio id="aud" preload="auto"></audio>
 
 <script>
-/* STATE */
+/* ── STATE ── */
 let curS=1,curV=1,totV=0,isPlaying=false,autoplay=true,showPhon=false,isLight=false;
 let curRec='ar.alafasy',repCount=1,repCur=0,curLang='fr';
 let vData=[],trFr=[],trEn=[],trPh=[];
 let vodData=null,vodGN=0,shareV=null,shareTheme='dark';
 const aud=document.getElementById('aud');
 
-/* SURAHS */
+/* ── DATA ── */
 const SS=[
   {n:1,ar:'الفاتحة',en:'Al-Fatiha',fr:"L'Ouverture",v:7,t:'Mecquoise'},
   {n:2,ar:'البقرة',en:'Al-Baqarah',fr:'La Vache',v:286,t:'Médinoise'},
@@ -442,39 +552,37 @@ const SS=[
 ];
 
 const RECS=[
-  {id:'ar.alafasy',           name:'Mishary Alafasy',          ar:'مشاري العفاسي',      style:'Mujawwad · Koweït'},
-  {id:'ar.abdurrahmaansudais',name:'Abdurrahmaan As-Sudais',   ar:'عبد الرحمن السديس',  style:'Tarteel · Arabie Saoudite'},
-  {id:'ar.husary',            name:'Mahmoud Khalil Al-Husary', ar:'محمود خليل الحصري',  style:'Murattal · Égypte'},
-  {id:'ar.minshawi',          name:'Mohamed Siddiq Minshawi',  ar:'محمد صديق المنشاوي', style:'Mujawwad · Égypte'},
-  {id:'ar.abdullahbasfar',    name:'Abdullah Basfar',          ar:'عبد الله بصفر',      style:'Murattal · Arabie Saoudite'},
-  {id:'ar.shaatree',          name:'Abu Bakr Ash-Shaatree',    ar:'أبو بكر الشاطري',    style:'Tarteel · Arabie Saoudite'},
-  {id:'ar.mahermuaiqly',      name:'Maher Al-Muaiqly',         ar:'ماهر المعيقلي',      style:'Murattal · Arabie Saoudite'},
-  {id:'ar.ahmedajamy',        name:'Ahmed Al-Ajamy',           ar:'أحمد العجمي',        style:'Murattal · Arabie Saoudite'},
-  {id:'ar.hanirifai',         name:'Hani Ar-Rifai',            ar:'هاني الرفاعي',       style:'Murattal · Arabie Saoudite'},
-  {id:'ar.muhammadayyoub',    name:'Muhammad Ayyoub',          ar:'محمد أيوب',          style:'Tarteel · Arabie Saoudite'},
-  {id:'ar.muhammadjibreel',   name:'Muhammad Jibreel',         ar:'محمد جبريل',         style:'Mujawwad · Égypte'},
-  {id:'ar.ibrahimakhbar',     name:'Ibrahim Al-Akhdar',        ar:'إبراهيم الأخضر',     style:'Tarteel · Arabie Saoudite'},
+  {id:'ar.alafasy',name:'Mishary Alafasy',ar:'مشاري العفاسي',style:'Mujawwad · Koweït'},
+  {id:'ar.abdurrahmaansudais',name:'Abdurrahmaan As-Sudais',ar:'عبد الرحمن السديس',style:'Tarteel · Arabie Saoudite'},
+  {id:'ar.husary',name:'Mahmoud Khalil Al-Husary',ar:'محمود خليل الحصري',style:'Murattal · Égypte'},
+  {id:'ar.minshawi',name:'Mohamed Siddiq Minshawi',ar:'محمد صديق المنشاوي',style:'Mujawwad · Égypte'},
+  {id:'ar.abdullahbasfar',name:'Abdullah Basfar',ar:'عبد الله بصفر',style:'Murattal · Arabie Saoudite'},
+  {id:'ar.shaatree',name:'Abu Bakr Ash-Shaatree',ar:'أبو بكر الشاطري',style:'Tarteel · Arabie Saoudite'},
+  {id:'ar.mahermuaiqly',name:'Maher Al-Muaiqly',ar:'ماهر المعيقلي',style:'Murattal · Arabie Saoudite'},
+  {id:'ar.ahmedajamy',name:'Ahmed Al-Ajamy',ar:'أحمد العجمي',style:'Murattal · Arabie Saoudite'},
+  {id:'ar.hanirifai',name:'Hani Ar-Rifai',ar:'هاني الرفاعي',style:'Murattal · Arabie Saoudite'},
+  {id:'ar.muhammadayyoub',name:'Muhammad Ayyoub',ar:'محمد أيوب',style:'Tarteel · Arabie Saoudite'},
+  {id:'ar.muhammadjibreel',name:'Muhammad Jibreel',ar:'محمد جبريل',style:'Mujawwad · Égypte'},
+  {id:'ar.ibrahimakhbar',name:'Ibrahim Al-Akhdar',ar:'إبراهيم الأخضر',style:'Tarteel · Arabie Saoudite'},
 ];
 
-/* INIT */
+/* ── INIT ── */
 window.addEventListener('load',()=>{
   buildSel();renderSList();loadSurah(1);loadVod();
   setTimeout(()=>document.getElementById('greeting').classList.add('hide'),4400);
 });
 
-/* SURAH DROPDOWN */
 function buildSel(){
   document.getElementById('ssel').innerHTML=SS.map(s=>`<option value="${s.n}">${s.n}. ${s.ar} — ${s.fr}</option>`).join('');
 }
 
-/* SIDE PANEL */
+/* ── PANELS ── */
 function renderSList(f=''){
   document.getElementById('slist').innerHTML=SS.filter(s=>
     s.ar.includes(f)||s.en.toLowerCase().includes(f.toLowerCase())||
     s.fr.toLowerCase().includes(f.toLowerCase())||String(s.n).includes(f)
   ).map(s=>`<div class="sli ${s.n===curS?'on':''}" onclick="goS(${s.n})">
-    <span class="slin">${s.n}</span>
-    <span class="sliar">${s.ar}</span>
+    <span class="slin">${s.n}</span><span class="sliar">${s.ar}</span>
     <span class="slien">${curLang==='fr'?s.fr:s.en}</span>
   </div>`).join('');
 }
@@ -483,14 +591,14 @@ function goS(n){closePanel();loadSurah(n);}
 function openPanel(){document.getElementById('spanel').classList.add('open');document.getElementById('overlay').classList.add('show');}
 function closePanel(){document.getElementById('spanel').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
 
-/* LOAD SURAH */
+/* ── LOAD SURAH ── */
 async function loadSurah(n){
   curS=n;curV=1;stopAud();vData=[];trFr=[];trEn=[];trPh=[];
   const m=SS[n-1];
-  document.getElementById('snum').textContent=`Sourate ${n}`;
+  document.getElementById('snum').textContent='Sourate '+n;
   document.getElementById('snar').textContent=m.ar;
-  document.getElementById('snen').textContent=`${m.en} — ${m.fr}`;
-  document.getElementById('snmeta').textContent=`${m.t} · ${m.v} versets`;
+  document.getElementById('snen').textContent=m.en+' — '+m.fr;
+  document.getElementById('snmeta').textContent=m.t+' · '+m.v+' versets';
   document.getElementById('bism').style.display=n===9?'none':'';
   document.getElementById('pinfo').textContent=m.ar;
   document.getElementById('ssel').value=n;
@@ -501,10 +609,10 @@ async function loadSurah(n){
   renderSList();window.scrollTo({top:0,behavior:'smooth'});
   try{
     const [r1,r2,r3,r4]=await Promise.all([
-      fetch(`https://api.alquran.cloud/v1/surah/${n}`),
-      fetch(`https://api.alquran.cloud/v1/surah/${n}/fr.hamidullah`),
-      fetch(`https://api.alquran.cloud/v1/surah/${n}/en.asad`),
-      fetch(`https://api.alquran.cloud/v1/surah/${n}/en.transliteration`),
+      fetch('https://api.alquran.cloud/v1/surah/'+n),
+      fetch('https://api.alquran.cloud/v1/surah/'+n+'/fr.hamidullah'),
+      fetch('https://api.alquran.cloud/v1/surah/'+n+'/en.asad'),
+      fetch('https://api.alquran.cloud/v1/surah/'+n+'/en.transliteration'),
     ]);
     const [d1,d2,d3,d4]=await Promise.all([r1.json(),r2.json(),r3.json(),r4.json()]);
     vData=d1.data.ayahs;trFr=d2.data.ayahs;trEn=d3.data.ayahs;trPh=d4.data.ayahs;
@@ -517,7 +625,6 @@ async function loadSurah(n){
   }
 }
 
-/* RENDER VERSES */
 function renderV(){
   document.getElementById('vlist').innerHTML=vData.map((v,i)=>{
     const tr=curLang==='fr'?(trFr[i]?.text||''):(trEn[i]?.text||'');
@@ -530,13 +637,13 @@ function renderV(){
       <div class="vacts">
         <button class="vbtn" id="vb${v.numberInSurah}" onclick="event.stopPropagation();playV(${v.numberInSurah})">▶ Écouter</button>
         <button class="vbtn" onclick="event.stopPropagation();copyV(${i})">⎘ Copier</button>
-        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openShare('verse')">⬡ Partager</button>
+        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openShare('verse')">⬡ Image</button>
+        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openVid('verse')">🎬 Vidéo</button>
       </div>
     </div>`;
   }).join('');
 }
 
-/* LANG */
 function setLang(l){
   curLang=l;
   document.getElementById('lbfr').classList.toggle('on',l==='fr');
@@ -547,99 +654,66 @@ function setLang(l){
   });
   renderSList();
 }
-
-/* PHONETIC */
 function togglePhon(){
   showPhon=!showPhon;
   document.getElementById('lbph').classList.toggle('on',showPhon);
   document.querySelectorAll('.vph').forEach(e=>e.classList.toggle('show',showPhon));
 }
-
-/* THEME */
 function toggleTheme(){
   isLight=!isLight;
   document.body.classList.toggle('light',isLight);
   document.getElementById('thbtn').textContent=isLight?'☀️':'🌙';
 }
 
-/* AUDIO */
+/* ── AUDIO ── */
 function gN(s,a){return SS.slice(0,s-1).reduce((x,r)=>x+r.v,0)+a;}
-
 function playV(n){
   stopAud();curV=n;
   const m=SS[curS-1];
-  document.getElementById('pinfo').textContent=`${m.ar} — ${toAr(n)}`;
+  document.getElementById('pinfo').textContent=m.ar+' — '+toAr(n);
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
   document.querySelectorAll('[id^="vb"]').forEach(b=>{b.classList.remove('on');b.textContent='▶ Écouter';});
   const card=document.getElementById('vc'+n),btn=document.getElementById('vb'+n);
   if(card){card.classList.add('playing');card.scrollIntoView({behavior:'smooth',block:'center'});}
   if(btn){btn.classList.add('on');btn.textContent='⏸ En cours';}
-  repCur=0;updRepCount();
+  repCur=0;updRC();
   const gn=gN(curS,n);
   aud.onerror=null;
-  aud.src=`https://cdn.islamic.network/quran/audio/128/${curRec}/${gn}.mp3`;
-  aud.onerror=()=>{
-    if(curRec!=='ar.alafasy'){
-      aud.onerror=null;
-      aud.src=`https://cdn.islamic.network/quran/audio/128/ar.alafasy/${gn}.mp3`;
-      aud.play().catch(()=>{});
-      toast('Audio indisponible · Alafasy utilisé');
-    }
-  };
-  aud.play().then(()=>{isPlaying=true;updPlay();}).catch(()=>{});
+  aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+gn+'.mp3';
+  aud.onerror=()=>{if(curRec!=='ar.alafasy'){aud.onerror=null;aud.src='https://cdn.islamic.network/quran/audio/128/ar.alafasy/'+gn+'.mp3';aud.play().catch(()=>{});toast('Alafasy utilisé par défaut');}};
+  aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{});
 }
-
 function stopAud(){
-  aud.pause();aud.src='';isPlaying=false;updPlay();
+  aud.pause();aud.src='';isPlaying=false;updPB();
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
   document.querySelectorAll('[id^="vb"]').forEach(b=>{b.classList.remove('on');b.textContent='▶ Écouter';});
   document.getElementById('progfill').style.width='0%';
   document.getElementById('tcur').textContent='0:00';
   document.getElementById('ttot').textContent='0:00';
 }
-
-function togglePlay(){if(!aud.src){playV(curV);return;}if(isPlaying){aud.pause();isPlaying=false;}else{aud.play();isPlaying=true;}updPlay();}
-function updPlay(){document.getElementById('playbtn').textContent=isPlaying?'⏸':'▶';}
+function togglePlay(){if(!aud.src){playV(curV);return;}if(isPlaying){aud.pause();isPlaying=false;}else{aud.play();isPlaying=true;}updPB();}
+function updPB(){document.getElementById('playbtn').textContent=isPlaying?'⏸':'▶';}
 function prevV(){if(curV>1)playV(curV-1);else if(curS>1)loadSurah(curS-1).then(()=>setTimeout(()=>playV(totV),800));}
 function nextV(){if(curV<totV)playV(curV+1);else if(curS<114)loadSurah(curS+1).then(()=>setTimeout(()=>playV(1),1200));}
 
 aud.addEventListener('ended',()=>{
-  isPlaying=false;updPlay();
-  if(repCount>1){
-    repCur++;
-    if(repCur<repCount){updRepCount();setTimeout(()=>playV(curV),500);return;}
-    else{repCur=0;updRepCount();}
-  }
+  isPlaying=false;updPB();
+  if(repCount>1){repCur++;if(repCur<repCount){updRC();setTimeout(()=>playV(curV),500);return;}else{repCur=0;updRC();}}
   if(autoplay)nextV();
 });
-
 aud.addEventListener('timeupdate',()=>{
   if(!aud.duration)return;
   document.getElementById('progfill').style.width=(aud.currentTime/aud.duration*100)+'%';
   document.getElementById('tcur').textContent=fmt(aud.currentTime);
   document.getElementById('ttot').textContent=fmt(aud.duration);
 });
+function seekA(e){if(!aud.duration)return;const r=e.currentTarget.getBoundingClientRect();aud.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*aud.duration;}
 
-function seekA(e){
-  if(!aud.duration)return;
-  const r=e.currentTarget.getBoundingClientRect();
-  aud.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*aud.duration;
-}
-
-/* REPEAT */
-function setRep(n,btn){
-  repCount=n;repCur=0;
-  document.querySelectorAll('.rb').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');updRepCount();
-}
-function updRepCount(){
-  document.getElementById('repcount').textContent=repCount>1?`${repCur}/${repCount}`:'';
-}
-
-/* AUTO */
+function setRep(n,btn){repCount=n;repCur=0;document.querySelectorAll('.rb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');updRC();}
+function updRC(){document.getElementById('repcount').textContent=repCount>1?repCur+'/'+repCount:'';}
 function toggleAuto(){autoplay=!autoplay;document.getElementById('autosw').classList.toggle('on',autoplay);}
 
-/* RECITER */
+/* ── RECITER ── */
 function renderRec(){
   document.getElementById('rpgrid').innerHTML=RECS.map(r=>`
     <div class="ritem ${r.id===curRec?'on':''}" data-id="${r.id}" data-name="${r.name}" onclick="selRec(this.dataset.id,this.dataset.name)">
@@ -648,33 +722,28 @@ function renderRec(){
       <div class="rchk">✓</div>
     </div>`).join('');
 }
-function selRec(id,name){
-  const was=isPlaying,v=curV;curRec=id;stopAud();renderRec();
-  document.getElementById('frec').textContent=name;closeRec();
-  if(was)setTimeout(()=>playV(v),150);
-}
+function selRec(id,name){const was=isPlaying,v=curV;curRec=id;stopAud();renderRec();document.getElementById('frec').textContent=name;closeRec();if(was)setTimeout(()=>playV(v),150);}
 function openRec(){renderRec();document.getElementById('rpanel').classList.add('open');document.getElementById('overlay').classList.add('show');}
 function closeRec(){document.getElementById('rpanel').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
 
-/* VERSET DU JOUR */
+/* ── VERSET DU JOUR ── */
 async function loadVod(){
-  const d=new Date();
-  const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  const d=new Date();const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
   const gn=(seed%6236)+1;vodGN=gn;
   let sN=1,aN=gn,cum=0;
   for(let i=0;i<SS.length;i++){if(cum+SS[i].v>=gn){sN=i+1;aN=gn-cum;break;}cum+=SS[i].v;}
   try{
     const [r1,r2,r3]=await Promise.all([
-      fetch(`https://api.alquran.cloud/v1/ayah/${gn}`),
-      fetch(`https://api.alquran.cloud/v1/ayah/${gn}/fr.hamidullah`),
-      fetch(`https://api.alquran.cloud/v1/ayah/${gn}/en.transliteration`),
+      fetch('https://api.alquran.cloud/v1/ayah/'+gn),
+      fetch('https://api.alquran.cloud/v1/ayah/'+gn+'/fr.hamidullah'),
+      fetch('https://api.alquran.cloud/v1/ayah/'+gn+'/en.transliteration'),
     ]);
     const [d1,d2,d3]=await Promise.all([r1.json(),r2.json(),r3.json()]);
     vodData={ar:d1.data.text,fr:d2.data.text,ph:d3.data.text,sN,aN};
     document.getElementById('vodar').textContent=vodData.ar;
     document.getElementById('vodtr').textContent=vodData.fr;
     document.getElementById('vodph').textContent=vodData.ph;
-    document.getElementById('vodref').textContent=`${SS[sN-1].ar} · ${sN}:${aN}`;
+    document.getElementById('vodref').textContent=SS[sN-1].ar+' · '+sN+':'+aN;
   }catch(e){
     document.getElementById('vodar').textContent='بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ';
     document.getElementById('vodtr').textContent="Au nom d'Allah, le Tout Miséricordieux.";
@@ -682,76 +751,191 @@ async function loadVod(){
 }
 function playVod(){
   const btn=document.getElementById('vodplaybtn');
-  if(aud.src.includes('/'+vodGN+'.mp3')&&isPlaying){aud.pause();isPlaying=false;updPlay();btn.textContent='▶ Écouter';return;}
+  if(aud.src.includes('/'+vodGN+'.mp3')&&isPlaying){aud.pause();isPlaying=false;updPB();btn.textContent='▶ Écouter';return;}
   stopAud();
-  aud.src=`https://cdn.islamic.network/quran/audio/128/${curRec}/${vodGN}.mp3`;
-  aud.play().then(()=>{isPlaying=true;updPlay();btn.textContent='⏸ En cours';}).catch(()=>{});
+  aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+vodGN+'.mp3';
+  aud.play().then(()=>{isPlaying=true;updPB();btn.textContent='⏸ En cours';}).catch(()=>{});
   aud.addEventListener('ended',function h(){btn.textContent='▶ Écouter';aud.removeEventListener('ended',h);},{once:true});
 }
 function toggleVodPh(){document.getElementById('vodph').classList.toggle('show');}
 
-/* SHARE IMAGE */
-const THEMES={
+/* ── SHARE IMAGE ── */
+const SH_THEMES={
   dark:{bg:'#0D0B07',bg2:'#1A1710',gold:'#C8A96E',tx:'#EAE0C8',tx2:'#A89B7A',bd:'rgba(200,169,110,.4)'},
   light:{bg:'#F5EDD8',bg2:'#EDE4C8',gold:'#8B6F3A',tx:'#1C1A14',tx2:'#5A4E35',bd:'rgba(139,111,58,.4)'},
   green:{bg:'#0D1F16',bg2:'#1B3526',gold:'#40916C',tx:'#D4EDE1',tx2:'#8FC4A8',bd:'rgba(64,145,108,.5)'},
 };
 function openShare(src){
-  if(src==='vod'){
-    if(!vodData)return;
-    shareV={ar:vodData.ar,tr:vodData.fr,ref:`${SS[vodData.sN-1].ar} — ${vodData.sN}:${vodData.aN}`};
-  }else{
-    const i=curV-1;if(!vData.length)return;
-    const tr=curLang==='fr'?(trFr[i]?.text||''):(trEn[i]?.text||'');
-    shareV={ar:vData[i].text,tr,ref:`${SS[curS-1].ar} — ${curS}:${curV}`};
-  }
-  document.getElementById('sharewrap').classList.add('open');
-  drawCanvas();
+  if(src==='vod'){if(!vodData)return;shareV={ar:vodData.ar,tr:vodData.fr,ref:SS[vodData.sN-1].ar+' — '+vodData.sN+':'+vodData.aN};}
+  else{const i=curV-1;if(!vData.length)return;const tr=curLang==='fr'?(trFr[i]?.text||''):(trEn[i]?.text||'');shareV={ar:vData[i].text,tr,ref:SS[curS-1].ar+' — '+curS+':'+curV};}
+  document.getElementById('sharewrap').classList.add('open');drawShare();
 }
 function closeShare(){document.getElementById('sharewrap').classList.remove('open');}
-function setShareTheme(t,btn){shareTheme=t;document.querySelectorAll('.thbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');drawCanvas();}
-function drawCanvas(){
-  const cv=document.getElementById('shcanvas');
-  const ctx=cv.getContext('2d');
-  const W=1080,H=1080,T=THEMES[shareTheme];
-  cv.width=W;cv.height=H;if(!shareV)return;
+function setShareTheme(t,btn){shareTheme=t;document.querySelectorAll('.thbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');drawShare();}
+function drawShare(){
+  const cv=document.getElementById('shcanvas'),ctx=cv.getContext('2d');
+  const W=1080,H=1080,T=SH_THEMES[shareTheme];cv.width=W;cv.height=H;if(!shareV)return;
   ctx.fillStyle=T.bg;ctx.fillRect(0,0,W,H);
-  ctx.fillStyle=T.bg2;rrect(ctx,60,60,W-120,H-120,24);ctx.fill();
-  ctx.strokeStyle=T.bd;ctx.lineWidth=2;rrect(ctx,60,60,W-120,H-120,24);ctx.stroke();
-  ctx.fillStyle=T.gold;rrect(ctx,60,60,W-120,5,3);ctx.fill();
-  ctx.font='500 50px "Noto Naskh Arabic",serif';ctx.fillStyle=T.gold;ctx.textAlign='center';
-  ctx.fillText('﷽',W/2,182);
+  ctx.fillStyle=T.bg2;rr(ctx,60,60,W-120,H-120,24);ctx.fill();
+  ctx.strokeStyle=T.bd;ctx.lineWidth=2;rr(ctx,60,60,W-120,H-120,24);ctx.stroke();
+  ctx.fillStyle=T.gold;rr(ctx,60,60,W-120,5,3);ctx.fill();
+  ctx.font='500 50px "Noto Naskh Arabic",serif';ctx.fillStyle=T.gold;ctx.textAlign='center';ctx.fillText('﷽',W/2,182);
   ctx.strokeStyle=T.bd;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(200,215);ctx.lineTo(W-200,215);ctx.stroke();
   ctx.font='600 54px "Noto Naskh Arabic",serif';ctx.fillStyle=T.tx;ctx.textAlign='center';
-  const al=wrapT(ctx,shareV.ar,W-180);
-  let y=350-(al.length-1)*28;
+  const al=wt(ctx,shareV.ar,W-180);let y=350-(al.length-1)*28;
   al.forEach(l=>{ctx.fillText(l,W/2,y);y+=84;});
   ctx.strokeStyle=T.bd;ctx.beginPath();ctx.moveTo(200,y+12);ctx.lineTo(W-200,y+12);ctx.stroke();
   ctx.font='italic 33px Georgia,serif';ctx.fillStyle=T.tx2;ctx.textAlign='center';
-  const tl=wrapT(ctx,shareV.tr,W-200,33);
-  let y2=y+70;tl.forEach(l=>{ctx.fillText(l,W/2,y2);y2+=48;});
+  const tl=wt(ctx,shareV.tr,W-200);let y2=y+70;tl.forEach(l=>{ctx.fillText(l,W/2,y2);y2+=48;});
   ctx.font='500 28px "Noto Naskh Arabic",serif';ctx.fillStyle=T.gold;ctx.textAlign='center';
   ctx.fillText('— '+shareV.ref+' —',W/2,H-152);
-  ctx.font='24px Georgia,serif';ctx.fillStyle=T.bd;
-  ctx.fillText('al-quran1.vercel.app',W/2,H-105);
+  ctx.font='24px Georgia,serif';ctx.fillStyle=T.bd;ctx.fillText('al-quran1.vercel.app',W/2,H-105);
 }
-function wrapT(ctx,txt,mw){
-  const words=txt.split(' ');const lines=[];let line='';
-  for(const w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>mw&&line){lines.push(line);line=w;}else line=t;}
-  if(line)lines.push(line);return lines.slice(0,5);
-}
-function rrect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();}
-function dlShare(){drawCanvas();const a=document.createElement('a');a.download='verset-quran.png';a.href=document.getElementById('shcanvas').toDataURL('image/png');a.click();}
+function dlShare(){drawShare();const a=document.createElement('a');a.download='verset-quran.png';a.href=document.getElementById('shcanvas').toDataURL('image/png');a.click();}
 
-/* COPY */
+/* ── VIDEO GENERATOR ── */
+const VT={
+  dark: {bg:'#0D0B07',bg2:'#1A1710',gold:'#C8A96E',tx:'#EAE0C8',tx2:'#A89B7A',bd:'rgba(200,169,110,.3)'},
+  light:{bg:'#F5EDD8',bg2:'#EDE4C8',gold:'#8B6F3A',tx:'#1C1A14',tx2:'#5A4E35',bd:'rgba(139,111,58,.3)'},
+  green:{bg:'#0D1F16',bg2:'#1B3526',gold:'#40916C',tx:'#D4EDE1',tx2:'#8FC4A8',bd:'rgba(64,145,108,.4)'},
+  blue: {bg:'#050E1A',bg2:'#0C1E30',gold:'#5BA3D9',tx:'#C8DFF0',tx2:'#7BA8C8',bd:'rgba(91,163,217,.3)'},
+};
+let vidCfg={w:1080,h:1920,theme:'dark',anim:'fade',dur:10,content:'ar+tr'};
+let vidV=null;
+
+function openVid(src){
+  if(src==='vod'){
+    if(!vodData)return;
+    vidV={ar:vodData.ar,tr:vodData.fr,ph:vodData.ph,ref:SS[vodData.sN-1].ar+' — '+vodData.sN+':'+vodData.aN};
+  }else{
+    const i=curV-1;if(!vData.length)return;
+    const tr=curLang==='fr'?(trFr[i]?.text||''):(trEn[i]?.text||'');
+    const ph=trPh[i]?.text||'';
+    vidV={ar:vData[i].text,tr,ph,ref:SS[curS-1].ar+' — '+curS+':'+curV};
+  }
+  document.getElementById('vidwrap').classList.add('open');
+  prevVid();
+}
+function closeVid(){document.getElementById('vidwrap').classList.remove('open');}
+
+function setVO(type,btn){
+  const grp=btn.closest('.vopts');
+  grp.querySelectorAll('.vopt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  if(type==='ratio'){vidCfg.w=+btn.dataset.w;vidCfg.h=+btn.dataset.h;}
+  if(type==='theme')vidCfg.theme=btn.dataset.t;
+  if(type==='anim')vidCfg.anim=btn.dataset.a;
+  if(type==='content')vidCfg.content=btn.dataset.c;
+  prevVid();
+}
+
+function drawFrame(ctx,W,H,t,cfg,v){
+  const T=VT[cfg.theme];
+  ctx.fillStyle=T.bg;ctx.fillRect(0,0,W,H);
+  // geometric circles
+  ctx.strokeStyle=T.bd;ctx.lineWidth=Math.max(1,W*.001);
+  for(let r=W*.35;r<=W*.95;r+=W*.12){ctx.beginPath();ctx.arc(W/2,H/2,r,0,Math.PI*2);ctx.stroke();}
+  // card
+  const p=W*.07;ctx.fillStyle=T.bg2;rr(ctx,p,p,W-p*2,H-p*2,W*.03);ctx.fill();
+  ctx.strokeStyle=T.bd;ctx.lineWidth=2;rr(ctx,p,p,W-p*2,H-p*2,W*.03);ctx.stroke();
+  ctx.fillStyle=T.gold;rr(ctx,p,p,W-p*2,H*.007,W*.003);ctx.fill();
+  // bismillah faint
+  ctx.font='500 '+Math.round(W*.055)+'px "Noto Naskh Arabic",serif';
+  ctx.fillStyle=T.gold;ctx.textAlign='center';ctx.globalAlpha=.2;
+  ctx.fillText('﷽',W/2,H*.12);ctx.globalAlpha=1;
+  // ornaments
+  ctx.font=Math.round(W*.025)+'px serif';ctx.fillStyle=T.gold;
+  ctx.fillText('✦',W/2-W*.12,H*.22);ctx.fillText('✦',W/2+W*.12,H*.22);
+  // animation
+  let alpha=1,ox=0,sc=1;
+  if(cfg.anim==='fade'){alpha=t<.15?t/.15:t>.85?(1-t)/.15:1;}
+  else if(cfg.anim==='slide'){ox=t<.2?(1-t/.2)*W*.06:0;alpha=t<.15?t/.15:1;}
+  else if(cfg.anim==='zoom'){sc=t<.2?.85+(t/.2)*.15:t>.8?1-((t-.8)/.2)*.1:1;alpha=t<.15?t/.15:t>.85?(1-t)/.15:1;}
+  ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,alpha));
+  if(sc!==1){ctx.translate(W/2,H/2);ctx.scale(sc,sc);ctx.translate(-W/2,-H/2);}
+  ctx.translate(ox,0);
+  // arabic
+  const as=Math.round(W*.056);ctx.font='600 '+as+'px "Noto Naskh Arabic",serif';
+  ctx.fillStyle=T.tx;ctx.textAlign='center';ctx.direction='rtl';
+  let ar=v.ar;
+  if(cfg.anim==='typewriter'){const ch=[...v.ar];ar=ch.slice(0,Math.min(Math.floor(t*ch.length*1.3),ch.length)).join('');}
+  const al=wt(ctx,ar,W-p*3.5);const alh=as*1.7;
+  let ay=H*.38-al.length*alh*.5+as;
+  al.forEach(l=>{ctx.fillText(l,W/2,ay);ay+=alh;});
+  ctx.direction='ltr';
+  const dy=ay+H*.025;
+  ctx.strokeStyle=T.bd;ctx.lineWidth=Math.max(1,W*.001);
+  ctx.beginPath();ctx.moveTo(W*.2,dy);ctx.lineTo(W*.8,dy);ctx.stroke();
+  if(cfg.content!=='ar'){
+    const sub=cfg.content==='ar+ph'?v.ph:v.tr;
+    const ss=Math.round(W*.032);ctx.font='italic '+ss+'px Georgia,serif';
+    ctx.fillStyle=T.tx2;ctx.textAlign='center';ctx.direction='ltr';
+    const sl=wt(ctx,sub,W-p*3.5);let sy=dy+H*.04;
+    sl.forEach(l=>{ctx.fillText(l,W/2,sy);sy+=ss*1.55;});
+  }
+  ctx.font='500 '+Math.round(W*.027)+'px "Noto Naskh Arabic",serif';
+  ctx.fillStyle=T.gold;ctx.textAlign='center';ctx.fillText('— '+v.ref+' —',W/2,H*.82);
+  ctx.font=Math.round(W*.021)+'px Georgia,serif';ctx.fillStyle=T.bd;
+  ctx.fillText('al-quran1.vercel.app',W/2,H*.88);
+  ctx.restore();
+}
+
+function prevVid(){
+  if(!vidV)return;
+  const cv=document.getElementById('vprev');
+  const asp=vidCfg.w/vidCfg.h;
+  const mw=260,mh=360;
+  let pw,ph;
+  if(asp>=1){pw=mw;ph=Math.round(mw/asp);}else{ph=mh;pw=Math.round(mh*asp);}
+  cv.width=pw;cv.height=ph;cv.style.width=pw+'px';cv.style.height=ph+'px';
+  drawFrame(cv.getContext('2d'),pw,ph,.5,vidCfg,vidV);
+}
+
+async function genVid(){
+  if(!vidV)return;
+  const W=Math.min(vidCfg.w,720),H=Math.min(vidCfg.h,1280);
+  const FPS=30,total=vidCfg.dur*FPS;
+  const btn=document.getElementById('vgenbtn');
+  const prog=document.getElementById('vprog');
+  const fill=document.getElementById('vprogfill');
+  const lbl=document.getElementById('vproglbl');
+  btn.disabled=true;prog.classList.add('show');
+  const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+  const ctx=cv.getContext('2d');
+  const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
+  const stream=cv.captureStream(FPS);
+  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4000000});
+  const chunks=[];
+  rec.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data);};
+  rec.onstop=()=>{
+    const blob=new Blob(chunks,{type:mime});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='verset-quran-'+Date.now()+'.webm';
+    a.click();URL.revokeObjectURL(url);
+    btn.disabled=false;prog.classList.remove('show');fill.style.width='0%';
+    toast('Vidéo téléchargée ✓');
+  };
+  rec.start();
+  for(let f=0;f<total;f++){
+    drawFrame(ctx,W,H,f/(total-1),vidCfg,vidV);
+    fill.style.width=Math.round(f/total*100)+'%';
+    lbl.textContent='Rendu '+Math.round(f/total*100)+'% — '+f+'/'+total+' images';
+    await new Promise(r=>setTimeout(r,1000/FPS));
+  }
+  rec.stop();
+}
+
+/* ── COPY ── */
 function copyV(i){
   const ar=vData[i]?.text||'';
   const tr=curLang==='fr'?(trFr[i]?.text||''):(trEn[i]?.text||'');
-  navigator.clipboard.writeText(`${ar}\n\n${tr}\n\n— ${SS[curS-1].ar} ${curS}:${i+1}`).then(()=>toast('Verset copié ✓')).catch(()=>{});
+  navigator.clipboard.writeText(ar+'\n\n'+tr+'\n\n— '+SS[curS-1].ar+' '+curS+':'+(i+1)).then(()=>toast('Verset copié ✓')).catch(()=>{});
 }
 
-/* UTILS */
-function fmt(s){if(!s||isNaN(s))return'0:00';return`${Math.floor(s/60)}:${Math.floor(s%60).toString().padStart(2,'0')}`;}
+/* ── UTILS ── */
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();}
+function wt(ctx,txt,mw){if(!txt)return[''];const words=txt.split(' ');const lines=[];let line='';for(const w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>mw&&line){lines.push(line);line=w;}else line=t;}if(line)lines.push(line);return lines.slice(0,6);}
+function fmt(s){if(!s||isNaN(s))return'0:00';return Math.floor(s/60)+':'+Math.floor(s%60).toString().padStart(2,'0');}
 function toAr(n){return n.toString().replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 </script>
